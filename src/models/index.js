@@ -5,7 +5,9 @@ let config = require('../config');
 mongoose.Promise = global.Promise;
 
 let User = exports.User = require('./user');
+let Team = exports.Team = require('./team');
 let Visit = exports.Visit = require('./visit');
+let VerifyCode = exports.VerifyCode = require('./verify_code');
 
 mongoose.connect(config.MONGODB_URL, {
 }, function (err) {

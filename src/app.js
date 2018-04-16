@@ -44,7 +44,11 @@ app.use(session(CONFIG, app));
 app.use(async (ctx, next) => {
     ctx.state.ip = ctx.headers['x-real-ip'] || ctx.ip;
     ctx.state._ = require('lodash');
-    ctx.state.title = 'THUPC2018报名网站';
+    ctx.state.title = '报名网站';
+    ctx.state.hidden_phone_number = function(phone_number) {
+        return phone_number.substr(0, 3) + "****" + phone_number.substr(7, 11);
+    }
+
     await next();
 });
 
@@ -56,13 +60,14 @@ router.use(auth.visit);
 router.use(auth.userM);
 
 router.use('', require('./controllers/index').routes());
+router.use('', require('./controllers/users').routes());
 
 app.use(router.routes());
 app.use(require('koa-static')('public', {
     maxage: SERVER.MAXAGE
 }));
 app.use(async (ctx, next) => {
-    await ctx.render('404');
+    await ctx.render('404', {layout: false});
 });
 
 app.listen(SERVER.PORT, SERVER.ADDRESS);

@@ -7,6 +7,10 @@ require('should');
 
 const router = module.exports = new Router();
 
+router.get('/', async ctx => {
+    await ctx.render("index");
+});
+
 router.get('/ping', async ctx => {
-    await ctx.render("pong");
+    await ctx.render("pong", {title: '404'});
 });
