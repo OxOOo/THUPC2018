@@ -1,0 +1,208 @@
+
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">中文队名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="teamname" required  lay-verify="required|nosidespace|teamname" placeholder="请输入队名" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">长度不超过20,不能以空白字符开始或结束</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">英文队名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="enteamname" required  lay-verify="required|nosidespace|enteamname" placeholder="请输入队名" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">长度不超过30,不能以空白字符开始或结束</div>
+    </div>
+    <hr/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">队员数量</label>
+        <div class="layui-input-inline">
+            <select lay-filter="count" name="member_count">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+            </select>
+        </div>
+    </div>
+    <div id="teammember_view"></div>
+    <fieldset class="layui-elem-field">
+        <legend><small>竞赛经历</small></legend>
+        <div class="layui-field-box">
+            <textarea name="experiences" placeholder="请输入内容" class="layui-textarea"></textarea>
+            <div class="layui-form-mid layui-word-aux">长度不超过4096,可以填写队员或队伍的竞赛经历,好的竞赛经历可以提高队伍通过审核的概率.</div>
+        </div>
+    </fieldset>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="team">立即提交</button>
+        </div>
+    </div>
+</form>
+<script id="teammember_template" type="text/html">
+    {{# for(var i = 0; i < d.count; i ++) { }}
+    {{# var m = d.members[i]; }}
+        <fieldset class="layui-elem-field">
+            <legend><small>队员{{i}}</small></legend>
+            <div class="layui-field-box">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="tname{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入姓名" value="{{ m.name }}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">电话号码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="tphone_number{{i}}" required  lay-verify="phone" placeholder="请输入电话号码" value="{{ m.phone_number }}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+                            <select name="tsex{{i}}" value="{{ m.sex }}">
+                                <option>男</option>
+                                <option>女</option>
+                                <option>保密</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">学校</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="tschool{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入学校" value="{{ m.school }}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">年级</label>
+                        <div class="layui-input-inline">
+                            <select name="tgrade{{i}}" value="{{ m.grade }}">
+                                <option>初中</option>
+                                <option>高中</option>
+                                <option>大一</option>
+                                <option>大二</option>
+                                <option>大三</option>
+                                <option>大四</option>
+                                <option>研究生</option>
+                                <option>其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">衣服尺寸</label>
+                        <div class="layui-input-inline">
+                            <select name="ttshirt_size{{i}}" value="{{ m.tshirt_size }}">
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                                <option>XXL</option>
+                                <option>XXXL</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    {{# } }}
+</script>
+
+<script>
+    layui.use(['form', 'laytpl'], function () {
+        var form = layui.form;
+        var laytpl = layui.laytpl;
+        var default_member = {
+            name: '',
+            phone_number: '',
+            school: '',
+            grade: '',
+            tshirt_size: '',
+            sex: ''
+        };
+        var data = {
+            teamname: '',
+            enteamname: '',
+            experiences: '',
+            members: [],
+            count: 0,
+        };
+
+        // 收集数据
+        function collectData() {
+            data.teamname = $('input[name=teamname]').val();
+            data.enteamname = $('input[name=enteamname]').val();
+            data.experiences = $('textarea[name=experiences]').val();
+            for(let i = 0; i < data.count; i ++) {
+                _.keys(default_member).forEach(function(key) {
+                    if ($(`input[name=t${key}${i}]`).length > 0)
+                        data.members[i][key] = $(`input[name=t${key}${i}]`).val();
+                    if ($(`select[name=t${key}${i}]`).length > 0)
+                        data.members[i][key] = $(`select[name=t${key}${i}]`).val();
+                });
+            }
+        }
+
+        // 渲染数据
+        function renderData() {
+            $('input[name=teamname]').val(data.teamname);
+            $('input[name=enteamname]').val(data.enteamname);
+            $('select[name=member_count]').val(data.count);
+            $('textarea[name=experiences]').val(data.experiences);
+
+            var tpl = $('#teammember_template').html();
+            var view = $('#teammember_view');
+            view.html(laytpl(tpl).render(data));
+
+            $('select').each(function() {
+                var s = $(this);
+                var val = s.attr('value');
+                if (!val) return;
+                s.find('option').each(function() {
+                    if (val == $(this).text()) $(this).attr('selected', '');
+                });
+            });
+
+            form.render();
+        }
+
+        form.on('select(count)', function (c) {
+            collectData();
+            data.count = c.value;
+            renderData();
+        });
+
+        form.on('submit(team)', function() {
+            collectData();
+            var send_data = _.cloneDeep(data);
+            send_data.members = send_data.members.slice(0, send_data.count);
+
+            var loading = layer.load();
+            $.post('/myteam_update', send_data, mustAfter(function(data) {
+                layer.close(loading);
+                console.log(data);
+                if (data.success) {
+                    window.location.href = '/myteam';
+                } else {
+                    layer.alert(data.msg, {title: '错误'}); 
+                }
+            }, 500));
+
+            return false;
+        });
+
+        var loading = layer.load();
+        $.get('/myteam_info', mustAfter(function(teamdata) {
+            layer.close(loading);
+
+            data = teamdata;
+            data.count = Math.max(1, teamdata.members.length);
+            while(data.members.length < 3) data.members.push(_.clone(default_member));
+            renderData();
+        }, 500));
+
+        form.render();
+    });
+</script>

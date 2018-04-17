@@ -12,5 +12,5 @@ router.get('/', async ctx => {
 });
 
 router.get('/ping', async ctx => {
-    await ctx.render("pong", {title: '404'});
+    await ctx.render("pong", {title: 'pong'});
 });

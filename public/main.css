@@ -13,6 +13,26 @@ body {
     text-align: center;
 }
 
+/* 文字居右 */
+.text-right {
+    text-align: right;
+}
+
+/* 队名 */
+.teamname {
+    font-size: 24px;
+}
+
+/* 名称 */
+.item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.itemvalue {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
 input.success, input.success:hover, input.success:focus {
     border-color: green!important;
 }

@@ -62,11 +62,41 @@ function registerCheckVerifyCode(ecode, ephone) {
     }, 300));
 }
 
+// 添加自定义验证
 layui.form.verify({
-    repassword: function(value, item) {
+    repassword: function(value, item) { // 重新输入密码
         var match = $($(item).attr('data-match'));
         if (value != match.val()) {
             return '两次输入的密码不相同';
         }
+    },
+    nosidespace: function(value) { // 两边不能头空格
+        if (_.trim(value) != value) {
+            return '不能以空白字符开始或结尾';
+        }
+    },
+    teamname: function(value) { // 中文队名
+        if (value.length > 20) {
+            return '中文队名长度不能超过20';
+        }
+    },
+    enteamname: function(value) { // 英文队名
+        if (value.length > 30) {
+            return '英文队名长度不能超过30';
+        }
+        if (!/^[a-zA-Z0-9_ ]+$/.test(value)) {
+            return '只能包含字母/数字/下划线和空格';
+        }
     }
 });
+
+// 必须在ms时间之后才调用func
+function mustAfter(func, ms) {
+    var end_time = Date.now() + ms;
+    return function() {
+        var args = _.toArray(arguments);
+        setTimeout(function() {
+            func.apply(window, args);
+        }, Math.max(10, end_time - Date.now()));
+    }
+}

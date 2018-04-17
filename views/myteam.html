@@ -1,0 +1,105 @@
+<div id="team_view">
+</div>
+
+<script id="team_template" type="text/html">
+    <fieldset class="layui-elem-field">
+        <legend>队伍信息</legend>
+        <div class="layui-field-box">
+            <div class="layui-row layui-col-space20 layui-hide-xs layui-hide-sm layui-show-md-block layui-show-lg-block">
+                <div class="layui-col-md2 text-right">
+                    <small>中文队名:</small>
+                </div>
+                <div class="layui-col-md4">
+                    <p class="teamname">{{ d.teamname || '尚未填写队名' }}</p>
+                </div>
+                <div class="layui-col-md2 text-right">
+                    <small>英文队名:</small>
+                </div>
+                <div class="layui-col-md4">
+                    <p class="teamname">{{ d.enteamname || 'noname' }}</p>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space20 layui-hide-md layui-hide-lg layui-show-xs-block layui-show-sm-block">
+                <div class="layui-col-md2">
+                    <small>中文队名:</small>
+                </div>
+                <div class="layui-col-md4 text-right">
+                    <p class="teamname">{{ d.teamname || '尚未填写队名' }}</p>
+                </div>
+                <div class="layui-col-md2">
+                    <small>英文队名:</small>
+                </div>
+                <div class="layui-col-md4 text-right">
+                    <p class="teamname">{{ d.enteamname || 'noname' }}</p>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field">
+        <legend>竞赛经历</legend>
+        <div class="layui-field-box">
+            <p><pre>{{ d.experiences || '暂无' }}</pre></p>
+        </div>
+    </fieldset>
+    {{# for(var i = 0; i < d.members.length; i ++) { }}
+    {{# var m = d.members[i]; }}
+    <fieldset class="layui-elem-field">
+        <legend>队员{{i}}</legend>
+        <div class="layui-field-box layui-col-space15">
+            <div class="layui-row">
+                <div class="item layui-col-md4">
+                    <small>姓名:</small><spin class="itemvalue">{{ m.name }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>电话号码:</small><spin class="itemvalue">{{ m.phone_number }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>性别:</small><spin class="itemvalue">{{ m.sex }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>学校:</small><spin class="itemvalue">{{ m.school }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>年级:</small><spin class="itemvalue">{{ m.grade }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>衣服尺寸:</small><spin class="itemvalue">{{ m.tshirt_size }}</spin>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    {{# } }}
+    <div class="layui-row">
+        <a class="layui-btn layui-btn-normal" href="/myteam_modify">修改队伍信息</a>
+    </div>
+</script>
+
+<script>
+    layui.use(['form', 'laytpl'], function () {
+        var form = layui.form;
+        var laytpl = layui.laytpl;
+        var data = {
+            teamname: '',
+            enteamname: '',
+            experiences: '',
+            members: [],
+        };
+
+        // 渲染
+        function render() {
+            var tpl = $('#team_template').html();
+            var view = $('#team_view');
+            view.html(laytpl(tpl).render(data));
+        }
+
+        render();
+
+        var loading = layer.load();
+        $.get('/myteam_info', mustAfter(function (teamdata) {
+            layer.close(loading);
+
+            data = teamdata;
+            render();
+        }, 500));
+    });
+</script>

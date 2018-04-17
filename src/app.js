@@ -60,7 +60,8 @@ router.use(auth.visit);
 router.use(auth.userM);
 
 router.use('', require('./controllers/index').routes());
-router.use('', require('./controllers/users').routes());
+router.use('', require('./controllers/user').routes());
+router.use('', require('./controllers/team').routes());
 
 app.use(router.routes());
 app.use(require('koa-static')('public', {
