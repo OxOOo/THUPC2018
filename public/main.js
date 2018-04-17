@@ -49,13 +49,16 @@ function registerCheckVerifyCode(ecode, ephone) {
         ecode.removeClass('failed');
     });
 
+    var request_id = 0;
     ecode.keyup(_.debounce(function() {
+        var this_id = ++ request_id;
         let code = ecode.val();
         let phone_number = ephone.val();
         $.post('/check_verify_code', {
             phone_number: phone_number,
             verify_code: code
         }, function(data) {
+            if (request_id != this_id) return;
             if (data.success) ecode.addClass('success');
             else ecode.addClass('failed');
         });
