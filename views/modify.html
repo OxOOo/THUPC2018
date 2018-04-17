@@ -3,7 +3,13 @@
     <h1 class="text-center">修 改 密 码</h1>
     <br/>
     <form class="layui-form layui-form-pane" action="/modify" method="POST">
-        <input type="hidden" name="phone_number" value="<%= user.phone_number %>"/>
+        <input type="hidden" name="phone_number" value="<%= user.phone_number %>">
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" placeholder="请输入手机号" value="<%= hidden_phone_number(user.phone_number) %>" disabled class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">验证码</label>
             <div class="layui-input-inline">

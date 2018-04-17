@@ -12,11 +12,11 @@ let auth = require('../services/auth');
 let tools = require('../services/tools');
 
 router.get('/myteam', auth.loginRequired, async ctx => {
-    await ctx.render("myteam", {title: '我的队伍'});
+    await ctx.render("myteam", {title: '我的队伍', tab: 'team'});
 });
 
 router.get('/myteam_modify', auth.loginRequired, async ctx => {
-    await ctx.render("myteam_modify", {title: '修改队伍'});
+    await ctx.render("myteam_modify", {title: '修改队伍', tab: 'team'});
 });
 
 router.get('/myteam_info', auth.loginRequired, async ctx => {

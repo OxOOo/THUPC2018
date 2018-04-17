@@ -3,20 +3,20 @@
 
 <script id="team_template" type="text/html">
     <fieldset class="layui-elem-field">
-        <legend>队伍信息</legend>
+        <legend>队伍信息 {{# if (!d.not_womenteam) { }} <spin>(<spin style="color:red">女队</spin>)</spin> {{# } }} </legend>
         <div class="layui-field-box">
             <div class="layui-row layui-col-space20 layui-hide-xs layui-hide-sm layui-show-md-block layui-show-lg-block">
                 <div class="layui-col-md2 text-right">
                     <small>中文队名:</small>
                 </div>
                 <div class="layui-col-md4">
-                    <p class="teamname">{{ d.teamname || '尚未填写队名' }}</p>
+                    <p class="teamname">{{= d.teamname || '尚未填写队名' }}</p>
                 </div>
                 <div class="layui-col-md2 text-right">
                     <small>英文队名:</small>
                 </div>
                 <div class="layui-col-md4">
-                    <p class="teamname">{{ d.enteamname || 'noname' }}</p>
+                    <p class="teamname">{{= d.enteamname || 'NULL' }}</p>
                 </div>
             </div>
             <div class="layui-row layui-col-space20 layui-hide-md layui-hide-lg layui-show-xs-block layui-show-sm-block">
@@ -24,13 +24,13 @@
                     <small>中文队名:</small>
                 </div>
                 <div class="layui-col-md4 text-right">
-                    <p class="teamname">{{ d.teamname || '尚未填写队名' }}</p>
+                    <p class="teamname">{{= d.teamname || '尚未填写队名' }}</p>
                 </div>
                 <div class="layui-col-md2">
                     <small>英文队名:</small>
                 </div>
                 <div class="layui-col-md4 text-right">
-                    <p class="teamname">{{ d.enteamname || 'noname' }}</p>
+                    <p class="teamname">{{= d.enteamname || 'NULL' }}</p>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
     <fieldset class="layui-elem-field">
         <legend>竞赛经历</legend>
         <div class="layui-field-box">
-            <p><pre>{{ d.experiences || '暂无' }}</pre></p>
+            <p><pre>{{= d.experiences || '暂无' }}</pre></p>
         </div>
     </fieldset>
     {{# for(var i = 0; i < d.members.length; i ++) { }}
@@ -48,28 +48,28 @@
         <div class="layui-field-box layui-col-space15">
             <div class="layui-row">
                 <div class="item layui-col-md4">
-                    <small>姓名:</small><spin class="itemvalue">{{ m.name }}</spin>
+                    <small>姓名:</small><spin class="itemvalue">{{= m.name }}</spin>
                 </div>
                 <div class="item layui-col-md4">
-                    <small>电话号码:</small><spin class="itemvalue">{{ m.phone_number }}</spin>
+                    <small>电话号码:</small><spin class="itemvalue">{{= m.phone_number }}</spin>
                 </div>
                 <div class="item layui-col-md4">
-                    <small>性别:</small><spin class="itemvalue">{{ m.sex }}</spin>
+                    <small>性别:</small><spin class="itemvalue">{{= m.sex }}</spin>
                 </div>
                 <div class="item layui-col-md4">
-                    <small>学校:</small><spin class="itemvalue">{{ m.school }}</spin>
+                    <small>学校:</small><spin class="itemvalue">{{= m.school }}</spin>
                 </div>
                 <div class="item layui-col-md4">
-                    <small>年级:</small><spin class="itemvalue">{{ m.grade }}</spin>
+                    <small>年级:</small><spin class="itemvalue">{{= m.grade }}</spin>
                 </div>
                 <div class="item layui-col-md4">
-                    <small>衣服尺寸:</small><spin class="itemvalue">{{ m.tshirt_size }}</spin>
+                    <small>衣服尺寸:</small><spin class="itemvalue">{{= m.tshirt_size }}</spin>
                 </div>
             </div>
         </div>
     </fieldset>
     {{# } }}
-    <div class="layui-row">
+    <div class="layui-row text-center">
         <a class="layui-btn layui-btn-normal" href="/myteam_modify">修改队伍信息</a>
     </div>
 </script>
@@ -87,6 +87,10 @@
 
         // 渲染
         function render() {
+            var not_womenteam = data.members.length == 0 || _.some(data.members, function(m) {
+                return m.sex != '女';
+            });
+            data.not_womenteam = not_womenteam;
             var tpl = $('#team_template').html();
             var view = $('#team_view');
             view.html(laytpl(tpl).render(data));

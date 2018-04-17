@@ -24,6 +24,7 @@
                 <option>3</option>
             </select>
         </div>
+        <div class="layui-form-mid layui-word-aux">如果队伍成员均为女性,则将会参与"最佳女队"的评选</div>
     </div>
     <div id="teammember_view"></div>
     <fieldset class="layui-elem-field">
@@ -35,7 +36,7 @@
     </fieldset>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="team">立即提交</button>
+            <button class="layui-btn" lay-submit lay-filter="team">确认修改</button>
         </div>
     </div>
 </form>
@@ -49,19 +50,19 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tname{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入姓名" value="{{ m.name }}" class="layui-input">
+                            <input type="text" name="tname{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入姓名" value="{{= m.name }}" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">电话号码</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tphone_number{{i}}" required  lay-verify="phone" placeholder="请输入电话号码" value="{{ m.phone_number }}" class="layui-input">
+                            <input type="text" name="tphone_number{{i}}" required  lay-verify="phone" placeholder="请输入电话号码" value="{{= m.phone_number }}" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">性别</label>
                         <div class="layui-input-inline">
-                            <select name="tsex{{i}}" value="{{ m.sex }}">
+                            <select name="tsex{{i}}" value="{{= m.sex }}">
                                 <option>男</option>
                                 <option>女</option>
                                 <option>保密</option>
@@ -73,13 +74,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">学校</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tschool{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入学校" value="{{ m.school }}" class="layui-input">
+                            <input type="text" name="tschool{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入学校" value="{{= m.school }}" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">年级</label>
                         <div class="layui-input-inline">
-                            <select name="tgrade{{i}}" value="{{ m.grade }}">
+                            <select name="tgrade{{i}}" value="{{= m.grade }}">
                                 <option>初中</option>
                                 <option>高中</option>
                                 <option>大一</option>
@@ -94,7 +95,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">衣服尺寸</label>
                         <div class="layui-input-inline">
-                            <select name="ttshirt_size{{i}}" value="{{ m.tshirt_size }}">
+                            <select name="ttshirt_size{{i}}" value="{{= m.tshirt_size }}">
                                 <option>S</option>
                                 <option>M</option>
                                 <option>L</option>
@@ -137,6 +138,7 @@
             data.experiences = $('textarea[name=experiences]').val();
             for(let i = 0; i < data.count; i ++) {
                 _.keys(default_member).forEach(function(key) {
+                    console.log(i, key, $(`select[name=t${key}${i}]`).length, $(`select[name=t${key}${i}]`).val());
                     if ($(`input[name=t${key}${i}]`).length > 0)
                         data.members[i][key] = $(`input[name=t${key}${i}]`).val();
                     if ($(`select[name=t${key}${i}]`).length > 0)
@@ -184,7 +186,9 @@
                 layer.close(loading);
                 console.log(data);
                 if (data.success) {
-                    window.location.href = '/myteam';
+                    layer.msg('修改成功,正在等待审核', {icon: 6, time: 1000}, function() {
+                        window.location.href = '/myteam';
+                    });
                 } else {
                     layer.alert(data.msg, {title: '错误'}); 
                 }

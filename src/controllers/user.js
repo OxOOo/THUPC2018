@@ -58,7 +58,7 @@ router.post('/check_verify_code', async (ctx, next) => {
 
 // 注册
 router.get('/register', async (ctx, next) => {
-    await ctx.render("register", {title: "注册"});
+    await ctx.render("register", {title: "注册", tab: 'user'});
 });
 router.post('/register', async (ctx, next) => {
     ctx.request.body.should.have.property('phone_number').a.String().and.not.eql("","请填写电话号码");
@@ -76,7 +76,7 @@ router.post('/register', async (ctx, next) => {
 });
 // 忘记密码
 router.get('/forgot', async (ctx, next) => {
-    await ctx.render("forgot", {title: '忘记密码'});
+    await ctx.render("forgot", {title: '忘记密码', tab: 'user'});
 });
 router.post('/forgot', async (ctx, next) => {
     ctx.request.body.should.have.property('phone_number').a.String().and.not.eql("","请填写电话号码");
@@ -94,7 +94,7 @@ router.post('/forgot', async (ctx, next) => {
 });
 // 修改密码
 router.get('/modify', auth.loginRequired, async (ctx, next) => {
-    await ctx.render("modify", {title: '修改密码'});
+    await ctx.render("modify", {title: '修改密码', tab: 'user'});
 });
 router.post('/modify', auth.loginRequired, async (ctx, next) => {
     ctx.request.body.should.have.property('verify_code').a.String().and.not.eql("","请填写电话号码");
@@ -112,7 +112,7 @@ router.post('/modify', auth.loginRequired, async (ctx, next) => {
 
 // 登录
 router.get('/login', async (ctx, next) => {
-    await ctx.render("login", {title: '登录'});
+    await ctx.render("login", {title: '登录', tab: 'user'});
 });
 router.post('/login', async (ctx, next) => {
     ctx.request.body.phone_number.should.be.a.String().and.not.eql("","请填写电话号码");

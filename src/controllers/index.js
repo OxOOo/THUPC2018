@@ -8,7 +8,7 @@ require('should');
 const router = module.exports = new Router();
 
 router.get('/', async ctx => {
-    await ctx.render("index");
+    await ctx.render("index", {tab: 'index'});
 });
 
 router.get('/ping', async ctx => {

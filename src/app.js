@@ -45,6 +45,7 @@ app.use(async (ctx, next) => {
     ctx.state.ip = ctx.headers['x-real-ip'] || ctx.ip;
     ctx.state._ = require('lodash');
     ctx.state.title = '报名网站';
+    ctx.state.tab = 'none';
     ctx.state.hidden_phone_number = function(phone_number) {
         return phone_number.substr(0, 3) + "****" + phone_number.substr(7, 11);
     }

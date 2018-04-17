@@ -22,9 +22,12 @@ exports.visit = async function (ctx, next) {
 let userM = exports.userM = async function (ctx, next) {
 	let user_id = ctx.session.user_id;
     ctx.state.user = null;
+    ctx.state.team = null;
     
 	if (user_id) {
         ctx.state.user = await User.findById(user_id);
+        if (ctx.state.user) ctx.state.team = await Team.findById(ctx.state.user.team_id);
+        console.log(ctx.state.team);
 	}
 
 	try {
