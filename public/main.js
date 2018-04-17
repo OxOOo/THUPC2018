@@ -59,8 +59,13 @@ function registerCheckVerifyCode(ecode, ephone) {
             verify_code: code
         }, function(data) {
             if (request_id != this_id) return;
-            if (data.success) ecode.addClass('success');
-            else ecode.addClass('failed');
+            if (data.success) {
+                ecode.addClass('success');
+                ecode.removeClass('failed');
+            } else {
+                ecode.addClass('failed');
+                ecode.removeClass('success');
+            }
         });
     }, 300));
 }

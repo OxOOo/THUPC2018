@@ -16,7 +16,9 @@ exports.SendSMS = async function(to, project, vars) {
             project: project,
             vars: JSON.stringify(vars),
             signature: MYSUBMAIL.APPKEY
-        });
+        })
+        .retry(5)
+        .timeout(10000);
     return res.body;
 }
 
