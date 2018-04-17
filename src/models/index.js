@@ -8,6 +8,7 @@ let User = exports.User = require('./user');
 let Team = exports.Team = require('./team');
 let Visit = exports.Visit = require('./visit');
 let VerifyCode = exports.VerifyCode = require('./verify_code');
+let SMS = exports.SMS = require('./sms');
 
 mongoose.connect(config.MONGODB_URL, {
 }, function (err) {

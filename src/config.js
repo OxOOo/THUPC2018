@@ -15,3 +15,5 @@ if ('MONGO_HOST' in process.env) { // for docker
 } else {
 	exports.MONGODB_URL = `mongodb://${config['MONGODB']['HOSTNAME']}/${config['MONGODB']['DATABASE']}`;
 }
+
+let MYSUBMAIL = exports.MYSUBMAIL = config['MYSUBMAIL'];
