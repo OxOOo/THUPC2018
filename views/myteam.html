@@ -35,18 +35,12 @@
             </div>
         </div>
     </fieldset>
-    <fieldset class="layui-elem-field">
-        <legend>竞赛经历</legend>
-        <div class="layui-field-box">
-            <p><pre>{{= d.experiences || '暂无' }}</pre></p>
-        </div>
-    </fieldset>
     {{# for(var i = 0; i < d.members.length; i ++) { }}
     {{# var m = d.members[i]; }}
     <fieldset class="layui-elem-field">
         <legend>队员{{i}}</legend>
-        <div class="layui-field-box layui-col-space15">
-            <div class="layui-row">
+        <div class="layui-field-box">
+            <div class="layui-row layui-col-space15">
                 <div class="item layui-col-md4">
                     <small>姓名:</small><spin class="itemvalue">{{= m.name }}</spin>
                 </div>
@@ -56,16 +50,30 @@
                 <div class="item layui-col-md4">
                     <small>性别:</small><spin class="itemvalue">{{= m.sex }}</spin>
                 </div>
-                <div class="item layui-col-md4">
-                    <small>学校:</small><spin class="itemvalue">{{= m.school }}</spin>
-                </div>
+            </div>
+            <div class="layui-row">
                 <div class="item layui-col-md4">
                     <small>年级:</small><spin class="itemvalue">{{= m.grade }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>学校:</small><spin class="itemvalue">{{= m.school }}</spin>
                 </div>
                 <div class="item layui-col-md4">
                     <small>衣服尺寸:</small><spin class="itemvalue">{{= m.tshirt_size }}</spin>
                 </div>
             </div>
+            <div class="layui-row">
+                <div class="item layui-col-md4 layui-col-md-offset4">
+                    <small>OI最高奖项:</small><spin class="itemvalue">{{= m.award_oi }}</spin>
+                </div>
+                <div class="item layui-col-md4">
+                    <small>ACM最高奖项:</small><spin class="itemvalue">{{= m.award_acm }}</spin>
+                </div>
+            </div>
+            <fieldset class="layui-elem-field">
+                <legend>竞赛经历</legend>
+                <div class="layui-field-box"><pre>{{= m.experiences }}</pre></div>
+            </fieldset>
         </div>
     </fieldset>
     {{# } }}

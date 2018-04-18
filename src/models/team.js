@@ -51,12 +51,19 @@ let teamSchema = new mongoose.Schema({
 				type: String,
 				required: true
 			},
+			award_oi: {
+				type: String,
+				required: true
+			},
+			award_acm: {
+				type: String,
+				required: true
+			},
+			experiences: { // 竞赛经历
+				type: String,
+				maxlength: 4096
+			},
 		}]
-	},
-
-	experiences: { // 竞赛经历
-		type: String,
-		maxlength: 4096
 	},
 
 	created_date: { type: Date, default: Date.now },

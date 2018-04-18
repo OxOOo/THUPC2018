@@ -27,13 +27,6 @@
         <div class="layui-form-mid layui-word-aux">如果队伍成员均为女性,则将会参与"最佳女队"的评选</div>
     </div>
     <div id="teammember_view"></div>
-    <fieldset class="layui-elem-field">
-        <legend><small>竞赛经历</small></legend>
-        <div class="layui-field-box">
-            <textarea name="experiences" lay-verify="noctrlchar" placeholder="请输入内容" class="layui-textarea"></textarea>
-            <div class="layui-form-mid layui-word-aux">长度不超过4096,可以填写队员或队伍的竞赛经历,好的竞赛经历可以提高队伍通过审核的概率.</div>
-        </div>
-    </fieldset>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit lay-filter="team">确认修改</button>
@@ -114,6 +107,51 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">OI或ACM竞赛经历</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" data-id="{{i}}" award="{{i}}" lay-filter="award" lay-skin="switch" lay-text="有|无">
+                        </div>
+                    </div>
+                    <div class="layui-inline" award="{{i}}">
+                        <label class="layui-form-label">OI系最高奖项</label>
+                        <div class="layui-input-inline">
+                            <select name="taward_oi{{i}}" value="{{= m.award_oi }}">
+                                <option>NOI金牌</option>
+                                <option>NOI银牌</option>
+                                <option>NOI铜牌</option>
+                                <option>NOI胸牌</option>
+                                <option>没参加</option>
+                                <option>IOI国家队</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" award="{{i}}">
+                        <label class="layui-form-label">ACM系最高奖项</label>
+                        <div class="layui-input-inline">
+                            <select name="taward_acm{{i}}" value="{{= m.award_acm }}">
+                                <option>ACM/ICPC区域赛金牌</option>
+                                <option>ACM/ICPC区域赛银牌</option>
+                                <option>ACM/ICPC区域赛铜牌</option>
+                                <option>ACM/ICPC区域赛胸牌</option>
+                                <option>没参加</option>
+                                <option>WF拿奖</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-block">
+                        <label class="layui-form-label">其他竞赛经历</label>
+                        <div class="layui-input-block">
+                            <textarea name="texperiences{{i}}" lay-verify="noctrlchar" placeholder="请输入内容" class="layui-textarea">{{= m.experiences }}</textarea>
+                            <div class="layui-form-mid layui-word-aux">
+                                长度不超过4096,例如:Code+比赛第10名/APIO2017金牌/CCPC2016秦皇岛赛区金牌/CF红名.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </fieldset>
     {{# } }}
@@ -129,12 +167,14 @@
             school: '',
             grade: '',
             tshirt_size: '',
-            sex: ''
+            sex: '',
+            award_oi: '没参加',
+            award_acm: '没参加',
+            experiences: '',
         };
         var data = {
             teamname: '',
             enteamname: '',
-            experiences: '',
             members: [],
             count: 0,
             highschool: [],
@@ -193,21 +233,44 @@
             });
         }
 
+        // 刷新获奖
+        function refreshAward() {
+            $('input[award]').each(function() {
+                var id = $(this).attr('data-id');
+                if (data.members[id].award_oi == default_member.award_oi && data.members[id].award_acm == default_member.award_acm) {
+                    $(this).removeAttr('checked');
+                    $(`div[award=${id}]`).hide();
+                } else {
+                    $(this).attr('checked', '');
+                    $(`div[award=${id}]`).show();
+                }
+            });
+        }
+
         // 收集数据
         function collectData() {
             data.teamname = $('input[name=teamname]').val();
             data.enteamname = $('input[name=enteamname]').val();
-            data.experiences = $('textarea[name=experiences]').val();
             for(let i = 0; i < data.count; i ++) {
                 _.keys(default_member).forEach(function(key) {
                     if ($(`input[name=t${key}${i}]`).length > 0)
                         data.members[i][key] = $(`input[name=t${key}${i}]`).val();
                     if ($(`select[name=t${key}${i}]`).length > 0)
                         data.members[i][key] = $(`select[name=t${key}${i}]`).val();
+                    if ($(`textarea[name=t${key}${i}]`).length > 0)
+                        data.members[i][key] = $(`textarea[name=t${key}${i}]`).val();
                     if (key == 'school' && $(`select[name=t${key}${i}]`).val() == '其他') {
                         data.members[i][key] = $(`input[name=tschool_custom${i}]`).val();
                     }
                 });
+                if (!$(`input[award=${i}]`).is(':checked')) {
+                    data.members[i].award_oi = default_member.award_oi;
+                    data.members[i].award_acm = default_member.award_acm;
+                } else {
+                    if (data.members[i].award_oi == default_member.award_oi && data.members[i].award_acm == default_member.award_acm) {
+                        data.members[i].award_oi = '';
+                    }
+                }
             }
         }
 
@@ -216,7 +279,6 @@
             $('input[name=teamname]').val(data.teamname);
             $('input[name=enteamname]').val(data.enteamname);
             $('select[name=member_count]').val(data.count);
-            $('textarea[name=experiences]').val(data.experiences);
 
             var tpl = $('#teammember_template').html();
             var view = $('#teammember_view');
@@ -225,6 +287,8 @@
             refreshSelect();
             refreshSchool();
             refreshSelect();
+
+            refreshAward();
 
             form.render();
         }
@@ -246,16 +310,20 @@
             collectData();
             renderData();
         });
+        form.on('switch(award)', function(c) {
+            collectData();
+            renderData();
+        });
 
         form.on('submit(team)', function() {
             collectData();
-            var send_data = _.cloneDeep(data);
-            send_data.members = send_data.members.slice(0, send_data.count);
+            var send_data = _.cloneDeep(_.pick(data, ['teamname', 'enteamname', 'members']));
+            send_data.members = send_data.members.slice(0, data.count);
 
             var loading = layer.load();
             $.post('/myteam_update', send_data, mustAfter(function(data) {
                 layer.close(loading);
-                console.log(data);
+                
                 if (data.success) {
                     layer.msg('修改成功,正在等待审核', {icon: 6, time: 1000}, function() {
                         window.location.href = '/myteam';
