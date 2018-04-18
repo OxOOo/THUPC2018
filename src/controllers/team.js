@@ -76,3 +76,14 @@ router.post('/myteam_update', auth.loginRequired, async ctx => {
         }
     }
 });
+
+router.get('/team/highschool', auth.loginRequired, async ctx => {
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'highschool.csv'), 'utf-8');
+    let list = _.split(content, '\n').map(x => _.trim(x)).filter(x => x.length>0);
+    ctx.body = list;
+});
+router.get('/team/university', auth.loginRequired, async ctx => {
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'university.csv'), 'utf-8');
+    let list = _.split(content, '\n').map(x => _.trim(x)).filter(x => x.length>0);
+    ctx.body = list;
+});

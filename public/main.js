@@ -87,6 +87,9 @@ layui.form.verify({
         if (value.length > 20) {
             return '中文队名长度不能超过20';
         }
+        if (!/^\S(.*\S)?$/.test(value)) {
+            return '中文队名非法';
+        }
     },
     enteamname: function(value) { // 英文队名
         if (value.length > 30) {
@@ -94,6 +97,9 @@ layui.form.verify({
         }
         if (!/^[a-zA-Z0-9_ ]+$/.test(value)) {
             return '只能包含字母/数字/下划线和空格';
+        }
+        if (!/^[A-Za-z0-9]([A-Za-z0-9_ ]*[A-Za-z0-9])?$/.test(value)) {
+            return '不能以下划线开始或结束';
         }
     }
 });

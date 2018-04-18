@@ -72,15 +72,9 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">学校</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="tschool{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入学校" value="{{= m.school }}" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
                         <label class="layui-form-label">年级</label>
                         <div class="layui-input-inline">
-                            <select name="tgrade{{i}}" value="{{= m.grade }}">
+                            <select name="tgrade{{i}}" value="{{= m.grade }}" data-id="{{i}}" grade lay-filter="grade">
                                 <option>初中</option>
                                 <option>高中</option>
                                 <option>大一</option>
@@ -90,6 +84,20 @@
                                 <option>研究生</option>
                                 <option>其他</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">学校</label>
+                        <div class="layui-input-inline">
+                            <select name="tschool{{i}}" required lay-verify="required" lay-search data-id="{{i}}" lay-filter="school" value="{{= m.school }}">
+                                <!-- fix -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" custom="{{i}}">
+                        <label class="layui-form-label">学校</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="tschool_custom{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入学校" value="{{= m.school }}" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -129,7 +137,61 @@
             experiences: '',
             members: [],
             count: 0,
+            highschool: [],
+            university: [],
         };
+
+        // 刷新select
+        function refreshSelect() {
+            $('select').each(function() {
+                var s = $(this);
+                var val = s.attr('value');
+                if (!val) return;
+                s.find('option').each(function() {
+                    if (val == $(this).text()) $(this).attr('selected', '');
+                });
+            });
+        }
+
+        // 刷新学校名单
+        function refreshSchool() {
+            $('select[grade]').each(function() {
+                var egrade = $(this);
+                var id = egrade.attr('data-id');
+                var eschool = $(`select[name=tschool${id}]`);
+                var ecustom = $(`div[custom=${id}]`);
+
+                eschool.html('');
+                if (_.includes(['大一', '大二', '大三', '大四', '研究生'], egrade.val())) {
+                    eschool.append('<option></option>');
+                    eschool.append('<option>其他</option>');
+                    _.each(data.university, function(s) {
+                        eschool.append(`<option>${s}</option>`);
+                    });
+                    if (_.includes(data.university, data.members[id].school)) {
+                        ecustom.hide();
+                    } else {
+                        ecustom.show();
+                        eschool.val('其他');
+                    }
+                } else if (_.includes(['高中'], egrade.val())) {
+                    eschool.append('<option></option>');
+                    eschool.append('<option>其他</option>');
+                    _.each(data.highschool, function(s) {
+                        eschool.append(`<option>${s}</option>`);
+                    });
+                    if (_.includes(data.highschool, data.members[id].school)) {
+                        ecustom.hide();
+                    } else {
+                        ecustom.show();
+                        eschool.val('其他');
+                    }
+                } else {
+                    eschool.append('<option>其他</option>');
+                    eschool.val('其他');
+                }
+            });
+        }
 
         // 收集数据
         function collectData() {
@@ -138,13 +200,16 @@
             data.experiences = $('textarea[name=experiences]').val();
             for(let i = 0; i < data.count; i ++) {
                 _.keys(default_member).forEach(function(key) {
-                    console.log(i, key, $(`select[name=t${key}${i}]`).length, $(`select[name=t${key}${i}]`).val());
                     if ($(`input[name=t${key}${i}]`).length > 0)
                         data.members[i][key] = $(`input[name=t${key}${i}]`).val();
                     if ($(`select[name=t${key}${i}]`).length > 0)
                         data.members[i][key] = $(`select[name=t${key}${i}]`).val();
+                    if (key == 'school' && $(`select[name=t${key}${i}]`).val() == '其他') {
+                        data.members[i][key] = $(`input[name=tschool_custom${i}]`).val();
+                    }
                 });
             }
+            console.log(data);
         }
 
         // 渲染数据
@@ -158,14 +223,9 @@
             var view = $('#teammember_view');
             view.html(laytpl(tpl).render(data));
 
-            $('select').each(function() {
-                var s = $(this);
-                var val = s.attr('value');
-                if (!val) return;
-                s.find('option').each(function() {
-                    if (val == $(this).text()) $(this).attr('selected', '');
-                });
-            });
+            refreshSelect();
+            refreshSchool();
+            refreshSelect();
 
             form.render();
         }
@@ -173,6 +233,18 @@
         form.on('select(count)', function (c) {
             collectData();
             data.count = c.value;
+            renderData();
+        });
+        form.on('select(grade)', function (c) {
+            refreshSchool();
+            refreshSelect();
+
+            form.render();
+        });
+        form.on('select(school)', function (c) {
+            var i = $(c.elem).attr('data-id');
+            $(`input[name=tschool_custom${i}]`).val('');
+            collectData();
             renderData();
         });
 
@@ -198,14 +270,23 @@
         });
 
         var loading = layer.load();
+        var delay = 500;
         $.get('/myteam_info', mustAfter(function(teamdata) {
             layer.close(loading);
 
-            data = teamdata;
+            _.assign(data, teamdata);
             data.count = Math.max(1, teamdata.members.length);
             while(data.members.length < 3) data.members.push(_.clone(default_member));
             renderData();
-        }, 500));
+        }, delay));
+        $.get('/team/highschool', mustAfter(function(list) {
+            data.highschool = list;
+            renderData();
+        }, delay));
+        $.get('/team/university', mustAfter(function(list) {
+            data.university = list;
+            renderData();
+        }, delay));
 
         form.render();
     });
