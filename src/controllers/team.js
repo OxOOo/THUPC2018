@@ -38,11 +38,14 @@ router.post('/myteam_update', auth.loginRequired, async ctx => {
         let experiences = ctx.request.body.experiences || '';
         auth.assert(teamname.length <= 20, '中文队名长度不能超过20');
         auth.assert(_.trim(teamname) == teamname, '中文队名不能以空白字符开始或结尾');
+        await tools.checkCtrlChar(teamname);
         auth.assert(enteamname.length <= 30, '英文队名长度不能超过30');
         auth.assert(_.trim(enteamname) == enteamname, '英文队名不能以空白字符开始或结尾');
         auth.assert(/^[a-zA-Z0-9_ ]+$/.test(enteamname), '英文队名只能包含字母/数字/下划线和空格');
+        await tools.checkCtrlChar(enteamname);
         auth.assert(_.isString(experiences), '没有竞赛经历');
         auth.assert(experiences.length <= 4096, '竞赛经历太长');
+        await tools.checkCtrlChar(experiences);
 
         let members = ctx.request.body.members || [];
         auth.assert(_.isArray(members), '格式不正确');
@@ -51,9 +54,11 @@ router.post('/myteam_update', auth.loginRequired, async ctx => {
         for(let m of members) {
             auth.assert(1 <= m.name.length, '姓名太短');
             auth.assert(m.name.length <= 50, '姓名太长');
+            await tools.checkCtrlChar(m.name);
             await tools.checkPhoneNumber(m.phone_number);
             auth.assert(1 <= m.school.length, '缺少学校');
             auth.assert(m.school.length <= 100, '学校名称太长');
+            await tools.checkCtrlChar(m.school);
             auth.assert(_.includes(['初中', '高中', '大一', '大二', '大三', '大四', '研究生', '其他'], m.grade), '年级不正确');
             auth.assert(_.includes(['S', 'M', 'L', 'XL', 'XXL', 'XXXL'], m.tshirt_size), '衣服尺寸不正确');
             auth.assert(_.includes(['男', '女', '保密'], m.sex), '性别不正确');

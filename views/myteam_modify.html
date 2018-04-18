@@ -3,16 +3,16 @@
     <div class="layui-form-item">
         <label class="layui-form-label">中文队名</label>
         <div class="layui-input-inline">
-            <input type="text" name="teamname" required  lay-verify="required|nosidespace|teamname" placeholder="请输入队名" class="layui-input">
+            <input type="text" name="teamname" required  lay-verify="required|nosidespace|noctrlchar|teamname" placeholder="请输入队名" class="layui-input">
         </div>
         <div class="layui-form-mid layui-word-aux">长度不超过20,不能以空白字符开始或结束</div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">英文队名</label>
         <div class="layui-input-inline">
-            <input type="text" name="enteamname" required  lay-verify="required|nosidespace|enteamname" placeholder="请输入队名" class="layui-input">
+            <input type="text" name="enteamname" required  lay-verify="required|nosidespace|noctrlchar|enteamname" placeholder="请输入队名" class="layui-input">
         </div>
-        <div class="layui-form-mid layui-word-aux">长度不超过30,不能以空白字符开始或结束</div>
+        <div class="layui-form-mid layui-word-aux">长度不超过30,不能以空白字符或下划线开始或结束</div>
     </div>
     <hr/>
     <div class="layui-form-item">
@@ -30,7 +30,7 @@
     <fieldset class="layui-elem-field">
         <legend><small>竞赛经历</small></legend>
         <div class="layui-field-box">
-            <textarea name="experiences" placeholder="请输入内容" class="layui-textarea"></textarea>
+            <textarea name="experiences" lay-verify="noctrlchar" placeholder="请输入内容" class="layui-textarea"></textarea>
             <div class="layui-form-mid layui-word-aux">长度不超过4096,可以填写队员或队伍的竞赛经历,好的竞赛经历可以提高队伍通过审核的概率.</div>
         </div>
     </fieldset>
@@ -50,7 +50,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tname{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入姓名" value="{{= m.name }}" class="layui-input">
+                            <input type="text" name="tname{{i}}" required  lay-verify="required|nosidespace|noctrlchar" placeholder="请输入姓名" value="{{= m.name }}" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -89,7 +89,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">学校</label>
                         <div class="layui-input-inline">
-                            <select name="tschool{{i}}" required lay-verify="required" lay-search data-id="{{i}}" lay-filter="school" value="{{= m.school }}">
+                            <select name="tschool{{i}}" required lay-verify="required|noctrlchar" lay-search data-id="{{i}}" lay-filter="school" value="{{= m.school }}">
                                 <!-- fix -->
                             </select>
                         </div>
@@ -97,7 +97,7 @@
                     <div class="layui-inline" custom="{{i}}">
                         <label class="layui-form-label">学校</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="tschool_custom{{i}}" required  lay-verify="required|nosidespace" placeholder="请输入学校" value="{{= m.school }}" class="layui-input">
+                            <input type="text" name="tschool_custom{{i}}" required  lay-verify="required|nosidespace|noctrlchar" placeholder="请输入学校" value="{{= m.school }}" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -209,7 +209,6 @@
                     }
                 });
             }
-            console.log(data);
         }
 
         // 渲染数据

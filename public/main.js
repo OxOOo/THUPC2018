@@ -83,6 +83,14 @@ layui.form.verify({
             return '不能以空白字符开始或结尾';
         }
     },
+    noctrlchar: function(value) {
+        if (!_.isString(value) || value.length == 0) return;
+        var ovalue = _.cloneDeep(value);
+        value = value.replace(/[\x00-\x09\x0B-\x0C\x0E-\x1F\x7F-\x9F]/ug, "");
+        if (value != ovalue) {
+            return '不能有控制字符';
+        }
+    },
     teamname: function(value) { // 中文队名
         if (value.length > 20) {
             return '中文队名长度不能超过20';
