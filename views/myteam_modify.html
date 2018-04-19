@@ -229,6 +229,7 @@
                 } else {
                     eschool.append('<option>其他</option>');
                     eschool.val('其他');
+                    ecustom.show();
                 }
             });
         }
@@ -300,10 +301,14 @@
             renderData();
         });
         form.on('select(grade)', function (c) {
-            refreshSchool();
-            refreshSelect();
-
-            form.render();
+            collectData();
+            var id = $(c.elem).attr('data-id');
+            if (_.includes(['大一', '大二', '大三', '大四', '研究生'], $(c.elem).val())) {
+                data.members[id].school = '清华大学';
+            } else if (_.includes(['高中'], $(c.elem).val())) {
+                if (data.highschool.length) data.members[id].school = data.highschool[0];
+            }
+            renderData();
         });
         form.on('select(school)', function (c) {
             var i = $(c.elem).attr('data-id');
