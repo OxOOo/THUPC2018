@@ -13,7 +13,7 @@ let SMS = exports.SMS = require('./sms');
 mongoose.connect(config.MONGODB_URL, {
 }, function (err) {
 	if (err) {
-		config.log.error('connect to %s error: ', config.MONGODB_URL, err.message);
+		console.error('connect to %s error: ', config.MONGODB_URL, err.message);
 		process.exit(1);
 	}
 });
