@@ -2,6 +2,17 @@ body {
     background-color: #ECEFF1;
 }
 
+.footer {
+    margin-top: 20px;
+    border-top-width: 1px;
+    border-top-color: rgba(0, 0, 0, 0.2);
+    border-top-style: solid;
+    padding-top: 10px;
+    font-size: 12px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+}
+
 /* 表格限宽并居中 */
 .entry-form {
     max-width: 400px;
