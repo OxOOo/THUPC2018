@@ -22,6 +22,11 @@
         <li class="layui-nav-item <%= tab == 'user' ? 'layui-this' : '' %>">
             <a href=""><%= hidden_phone_number(user.phone_number) %></a>
             <dl class="layui-nav-child">
+                <% if(user.is_admin) { %>
+                <dd>
+                    <a href="/admin">后台</a>
+                </dd>
+                <% } %>
                 <dd>
                     <a href="/modify">修改密码</a>
                 </dd>

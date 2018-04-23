@@ -27,7 +27,6 @@ let userM = exports.userM = async function (ctx, next) {
 	if (user_id) {
         ctx.state.user = await User.findById(user_id);
         if (ctx.state.user) ctx.state.team = await Team.findById(ctx.state.user.team_id);
-        console.log(ctx.state.team);
 	}
 
 	try {

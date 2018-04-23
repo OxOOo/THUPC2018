@@ -1,0 +1,32 @@
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>队名</th>
+            <th>英文队名</th>
+            <th>姓名</th>
+            <th>电话号码</th>
+            <th>学校</th>
+            <th>性别</th>
+            <th>OI奖/ACM奖</th>
+            <th>竞赛经历</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% teams.forEach(function(t) { %>
+            <% t.members.forEach(function(m, i) { %>
+                <tr>
+                    <% if(i == 0) { %>
+                    <td rowspan="<%= t.members.length %>"><%= t.teamname %></td>
+                    <td rowspan="<%= t.members.length %>"><%= t.enteamname %></td>
+                    <% } %>
+                    <td><%= m.name %></td>
+                    <td><%= m.phone_number %></td>
+                    <td><%= m.school %></td>
+                    <td><%= m.sex %></td>
+                    <td><%= m.award_oi %>/<%= m.award_acm %></td>
+                    <td><pre><%= m.experiences %></pre></td>
+                </tr>
+            <% }) %>
+        <% }) %>
+    </tbody>
+</table>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>THUPC2018后台</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
+    <script src="/jquery-3.3.1.min.js"></script>
+    <script src="/layui/layui.all.js"></script>
+    <script src="/lodash.min.js"></script>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <a href="/admin"><div class="layui-logo">THUPC2018后台</div></a>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item">
+                    <a href="/">主页</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="#">
+                        <%= hidden_phone_number(user.phone_number) %>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">管理</a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="/admin/su">切换用户</a>
+                            </dd>
+                            <dd>
+                                <a href="/admin/users">已注册用户列表</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">队伍</a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="/admin/teams">队伍列表</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">短信</a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="/admin/sms">短信列表</a>
+                            </dd>
+                            <dd>
+                                <a href="/admin/create_sms">创建短信发送任务</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;">
+                <%- include ../includes/flash.html %>
+                <br/>
+                <br/>
+                <%- body %>
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            底部固定区域
+        </div>
+    </div>
+    <script>
+        layui.use('element', function () {
+            var element = layui.element;
+            element.render('nav');
+        });
+    </script>
+</body>
+
+</html>

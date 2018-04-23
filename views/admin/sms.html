@@ -1,0 +1,25 @@
+<table class="layui-table" id="sms-table">
+</table>
+
+<script>
+    layui.use('table', function() {
+        var table = layui.table;
+        table.render({
+            elem: '#sms-table',
+            height: 315,
+            url: '/admin/sms_data',
+            page: true,
+            cols: [[
+                {field:'to', title: '电话'},
+                {field:'project', title: 'project'},
+                {field:'vars', title: '变量'},
+                {field:'priority', title: '优先级'},
+                {field:'has_sent', title: '是否已发送'},
+                {field:'sent_at', title: 'sent_at'},
+                {field:'send_api', title: 'send_api'},
+                {field:'sent_msg', title: 'sent_msg'},
+                {field:'created_date', title: '创建时间'},
+            ]]
+        });
+    });
+</script>
