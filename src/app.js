@@ -8,6 +8,7 @@ let render = require('./services/ejs_render');
 let bodyParser = require('koa-bodyparser');
 let path = require('path');
 let session = require('koa-session');
+let MarkdownIt = require('markdown-it');
 
 let config = require('./config');
 let { SERVER } = require('./config');
@@ -46,6 +47,9 @@ app.use(async (ctx, next) => {
     ctx.state._ = require('lodash');
     ctx.state.title = '报名网站';
     ctx.state.tab = 'none';
+    ctx.state.md = new MarkdownIt({
+        html: true,
+    });
     ctx.state.hidden_phone_number = function(phone_number) {
         return phone_number.substr(0, 3) + "****" + phone_number.substr(7, 11);
     }

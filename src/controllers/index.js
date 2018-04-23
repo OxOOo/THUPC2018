@@ -11,6 +11,21 @@ router.get('/', async ctx => {
     await ctx.render("index", {tab: 'index'});
 });
 
+router.get('/info', async ctx => {
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'docs', 'info.md'), 'utf-8');
+    await ctx.render('markdown', {tab: 'info', content: content});
+});
+
+router.get('/logs', async ctx => {
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'docs', 'logs.md'), 'utf-8');
+    await ctx.render('markdown', {tab: 'info', content: content});
+});
+
+router.get('/faq', async ctx => {
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'docs', 'faq.md'), 'utf-8');
+    await ctx.render('markdown', {tab: 'info', content: content});
+});
+
 router.get('/ping', async ctx => {
     await ctx.render("pong", {title: 'pong'});
 });
