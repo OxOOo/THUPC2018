@@ -3,7 +3,11 @@
 
 <script id="team_template" type="text/html">
     <fieldset class="layui-elem-field">
-        <legend>队伍信息 {{# if (!d.not_womenteam) { }} <spin>(<spin style="color:red">女队</spin>)</spin> {{# } }} </legend>
+        <legend>
+            队伍信息
+            {{# if (!d.not_womenteam) { }} <spin>(<spin style="color:red">女队</spin>)</spin> {{# } }}
+            {{# if (d.info_filled) { }} (等待审核) {{# } else { }} (<spin style="color:red">尚未报名</spin>) {{# } }}
+        </legend>
         <div class="layui-field-box">
             <div class="layui-row layui-col-space20 layui-hide-xs layui-hide-sm layui-show-md-block layui-show-lg-block">
                 <div class="layui-col-md2 text-right">
@@ -79,6 +83,9 @@
     {{# } }}
     <div class="layui-row text-center">
         <a class="layui-btn layui-btn-normal" href="/myteam_modify">修改队伍信息</a>
+        {{# if (d.info_filled) { }}
+        <a class="layui-btn" href="/myteam_cancel">取消报名</a>
+        {{# } }}
     </div>
 </script>
 

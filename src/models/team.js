@@ -13,12 +13,16 @@ let teamSchema = new mongoose.Schema({
 	teamname: { // 队名
 		type: String,
 		maxlength: 20,
-		match: /^\S(.*\S)?$/
+		match: /^\S(.*\S)?$/,
+		unique: true,
+		sparse: true,
 	},
 	enteamname: { // 英文队名
 		type: String,
 		maxlength: 30,
-		match: /^[A-Za-z0-9]([A-Za-z0-9_ ]*[A-Za-z0-9])?$/
+		match: /^[A-Za-z0-9]([A-Za-z0-9_ ]*[A-Za-z0-9])?$/,
+		unique: true,
+		sparse: true
 	},
 
 	members: {

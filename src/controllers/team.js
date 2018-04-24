@@ -19,10 +19,19 @@ router.get('/myteam_modify', auth.loginRequired, async ctx => {
     await ctx.render("myteam_modify", {title: '修改队伍', tab: 'team'});
 });
 
+router.get('/myteam_cancel', auth.loginRequired, async ctx => {
+    let team = await Team.findById(ctx.state.user.team_id);
+    auth.assert(team, '未知错误');
+    team.info_filled = false;
+    await team.save();
+    ctx.state.flash.success = '取消成功';
+    await ctx.redirect('back');
+});
+
 router.get('/myteam_info', auth.loginRequired, async ctx => {
     let team = await Team.findById(ctx.state.user.team_id);
     auth.assert(team, '未知错误');
-    ctx.body = _.pick(team, ['teamname', 'enteamname', 'members', 'experiences']);
+    ctx.body = _.pick(team, ['teamname', 'enteamname', 'members', 'experiences', 'info_filled']);
 });
 
 router.post('/myteam_update', auth.loginRequired, async ctx => {
