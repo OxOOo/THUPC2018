@@ -51,6 +51,11 @@ router.post('/myteam_update', auth.loginRequired, async ctx => {
         auth.assert(/^[a-zA-Z0-9_ ]+$/.test(enteamname), '英文队名只能包含字母/数字/下划线和空格');
         await tools.checkCtrlChar(enteamname);
 
+        let aready_team = await Team.findOne({teamname: teamname});
+        auth.assert(!aready_team || aready_team._id.equals(team._id), '中文队名已存在');
+        let en_aready_team = await Team.findOne({enteamname: enteamname});
+        auth.assert(!en_aready_team || en_aready_team._id.equals(team._id), '英文队名已存在');
+
         let members = ctx.request.body.members || [];
         auth.assert(_.isArray(members), '格式不正确');
         auth.assert(members.length >= 1, '至少一个队员');
