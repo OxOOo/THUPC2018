@@ -8,7 +8,8 @@ require('should');
 const router = module.exports = new Router();
 
 router.get('/', async ctx => {
-    await ctx.render("index", {tab: 'index'});
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'docs', 'logs.md'), 'utf-8');
+    await ctx.render("index", {tab: 'index', logs_content: content});
 });
 
 router.get('/info', async ctx => {

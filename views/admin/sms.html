@@ -6,9 +6,9 @@
         var table = layui.table;
         table.render({
             elem: '#sms-table',
-            height: 315,
             url: '/admin/sms_data',
             page: true,
+            limit: 20,
             cols: [[
                 {field:'to', title: '电话'},
                 {field:'project', title: 'project'},
