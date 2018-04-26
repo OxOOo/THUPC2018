@@ -56,6 +56,21 @@ router.get('/admin/teams_points', auth.adminRequired, async ctx => {
     });
 });
 router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
+    let statistics = {};
+    for(let status of ['all', 'none', 'accepted', 'rejected']) {
+        let opt = {info_filled: true, points_filled: true};
+        if (status != 'all') opt.team_status = status;
+        let teams = await Team.find(opt);
+        
+        let info = {};
+        info.teams_count = teams.length;
+        info.members_count = _.sum(teams.map(x => x.members.length));
+        info.each_teams_count = [0, 0, 0, 0];
+        teams.forEach(x => info.each_teams_count[x.members.length] ++);
+
+        statistics[status] = info;
+    }
+
     let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'none'}).sort('-_id');
     for(let t of teams) {
         for(let m of t.members) {
@@ -67,10 +82,25 @@ router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
-        teams: teams
+        teams: teams, statistics: statistics
     });
 });
 router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
+    let statistics = {};
+    for(let status of ['all', 'none', 'accepted', 'rejected']) {
+        let opt = {info_filled: true, points_filled: true};
+        if (status != 'all') opt.team_status = status;
+        let teams = await Team.find(opt);
+        
+        let info = {};
+        info.teams_count = teams.length;
+        info.members_count = _.sum(teams.map(x => x.members.length));
+        info.each_teams_count = [0, 0, 0, 0];
+        teams.forEach(x => info.each_teams_count[x.members.length] ++);
+
+        statistics[status] = info;
+    }
+
     let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'accepted'}).sort('-_id');
     for(let t of teams) {
         for(let m of t.members) {
@@ -82,10 +112,25 @@ router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
-        teams: teams
+        teams: teams, statistics: statistics
     });
 });
 router.get('/admin/teams_status_rejected', auth.adminRequired, async ctx => {
+    let statistics = {};
+    for(let status of ['all', 'none', 'accepted', 'rejected']) {
+        let opt = {info_filled: true, points_filled: true};
+        if (status != 'all') opt.team_status = status;
+        let teams = await Team.find(opt);
+        
+        let info = {};
+        info.teams_count = teams.length;
+        info.members_count = _.sum(teams.map(x => x.members.length));
+        info.each_teams_count = [0, 0, 0, 0];
+        teams.forEach(x => info.each_teams_count[x.members.length] ++);
+
+        statistics[status] = info;
+    }
+    
     let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'rejected'}).sort('-_id');
     for(let t of teams) {
         for(let m of t.members) {
@@ -97,7 +142,7 @@ router.get('/admin/teams_status_rejected', auth.adminRequired, async ctx => {
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
-        teams: teams
+        teams: teams, statistics: statistics
     });
 });
 router.get('/admin/teams/:team_id/status/:status', auth.adminRequired, async ctx => {

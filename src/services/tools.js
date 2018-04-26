@@ -15,6 +15,7 @@ exports.checkCtrlChar = async function(value) {
 
 exports.cleanTeamPoints = async function(team) {
     team.points_filled = false;
+    team.team_status = 'none';
     for(let m of team.members) {
         m.award_oi_points = null;
         m.award_acm_points = null;

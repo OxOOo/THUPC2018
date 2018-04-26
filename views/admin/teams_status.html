@@ -1,3 +1,12 @@
+<% let cnname = {'all': '总', 'none': '待定', 'accepted': '通过', 'rejected': '拒绝'} %>
+<% for(let status of Object.keys(cnname)) { %>
+    <h3><%= cnname[status] %></h3>
+    <p>队伍总数:<%= statistics[status].teams_count %></p>
+    <p>人总数:<%= statistics[status].members_count %></p>
+    <p>单人队伍:<%= statistics[status].each_teams_count[1] %> | 双人队伍:<%= statistics[status].each_teams_count[2] %> | 三人队伍:<%= statistics[status].each_teams_count[3] %></p>
+    <hr/>
+<% } %>
+
 <table class="layui-table">
     <thead>
         <tr>
