@@ -10,6 +10,12 @@ let teamSchema = new mongoose.Schema({
 		default: false
 	},
 
+	points_filled: { // 是否评分完毕
+		type: Boolean,
+		default: false,
+		required: true
+	},
+
 	teamname: { // 队名
 		type: String,
 		maxlength: 20,
@@ -66,6 +72,22 @@ let teamSchema = new mongoose.Schema({
 			experiences: { // 竞赛经历
 				type: String,
 				maxlength: 4096
+			},
+
+			award_oi_points: { // OI得分
+				type: Number,
+				default: null,
+				minimum: 1
+			},
+			award_acm_points: {  // ACM得分
+				type: Number,
+				default: null,
+				minimum: 1
+			},
+			experiences_points: {  // 其他得分
+				type: Number,
+				default: null,
+				minimum: 1
 			},
 		}]
 	},

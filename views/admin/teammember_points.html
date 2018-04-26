@@ -1,0 +1,69 @@
+<table class="layui-table">
+    <colgroup>
+        <col width="200">
+        <col>
+    </colgroup>
+    <tbody>
+        <tr>
+            <th>中文队名</th>
+            <td><%= m.team.teamname %></td>
+        </tr>
+        <tr>
+            <th>英文队名</th>
+            <td><%= m.team.enteamname %></td>
+        </tr>
+        <tr>
+            <th>姓名</th>
+            <td><%= m.name %></td>
+        </tr>
+        <tr>
+            <th>学校</th>
+            <td><%= m.school %></td>
+        </tr>
+        <tr>
+            <th>年级</th>
+            <td><%= m.grade %></td>
+        </tr>
+        <tr>
+            <th>性别</th>
+            <td><%= m.sex %></td>
+        </tr>
+        <tr>
+            <th>OI获奖经历</th>
+            <td><%= m.award_oi %></td>
+        </tr>
+        <tr>
+            <th>ACM获奖经历</th>
+            <td><%= m.award_acm %></td>
+        </tr>
+        <tr>
+            <th>竞赛经历</th>
+            <td><pre><%= m.experiences %></pre></td>
+        </tr>
+    </tbody>
+</table>
+
+<br/>
+<form class="layui-form" action="/admin/teammember_points" method="POST">
+    <input type="hidden" name="team_id" value="<%= m.team._id %>"/>
+    <input type="hidden" name="member_id" value="<%= m._id %>"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">其他竞赛经历得分</label>
+        <div class="layui-input-inline">
+            <input type="text" name="experiences_points" required lay-verify="number" placeholder="其他竞赛经历得分" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit>提交</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render();
+        $('input[name=experiences_points]').focus();
+    });
+</script>

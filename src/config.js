@@ -17,3 +17,5 @@ if ('MONGO_HOST' in process.env) { // for docker
 }
 
 let MYSUBMAIL = exports.MYSUBMAIL = config['MYSUBMAIL'];
+let OI_POINTS = exports.OI_POINTS = config['OI_POINTS'];
+let ACM_POINTS = exports.ACM_POINTS = config['ACM_POINTS'];

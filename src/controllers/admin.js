@@ -7,6 +7,7 @@ require('should');
 
 let auth = require('../services/auth');
 let tools = require('../services/tools');
+let config = require('../config');
 let { User, Team, SMS } = require('../models');
 
 const router = module.exports = new Router();
@@ -46,6 +47,58 @@ router.get('/admin/teams', auth.adminRequired, async ctx => {
         teams: teams,
         teams_count: teams_count, members_count: members_count, each_teams_count: each_teams_count
     });
+});
+router.get('/admin/teammember_points', auth.adminRequired, async ctx => {
+    let teams = await Team.find({info_filled: true, points_filled: false}).sort('_id').limit(10);
+    let members = [];
+    for(let t of teams) {
+        for(let m of t.members) {
+            if (m.experiences_points) continue;
+            let obj = {};
+            obj = m;
+            obj.team = t;
+            members.push(obj);
+        }
+    }
+
+    let m = _.sample(members);
+    await ctx.render("admin/teammember_points", {
+        layout: 'admin/layout',
+        m: m
+    });
+});
+router.post('/admin/teammember_points', auth.adminRequired, async ctx => {
+    let experiences_points = ctx.request.body.experiences_points;
+    let team_id = ctx.request.body.team_id;
+    let member_id = ctx.request.body.member_id;
+    auth.assert(experiences_points, '错误1');
+    auth.assert(team_id, '错误2');
+    auth.assert(member_id, '错误3');
+
+    let team = await Team.findById(team_id);
+    auth.assert(team, "队伍不正确");
+    let member = team.members.id(member_id);
+    auth.assert(member, "成员不正确");
+
+    const OI_POINTS = config.OI_POINTS;
+    const ACM_POINTS = config.ACM_POINTS;
+    for(let m of team.members) {
+        m.experiences_points = m.experiences_points || null;
+        m.award_oi_points = m.award_oi_points || null;
+        m.award_acm_points = m.award_acm_points || null;
+    }
+
+    member.experiences_points = experiences_points;
+    auth.assert(_.includes(_.keys(OI_POINTS), member.award_oi), '错误4');
+    member.award_oi_points = OI_POINTS[member.award_oi];
+    auth.assert(_.includes(_.keys(ACM_POINTS), member.award_acm), '错误5');
+    member.award_acm_points = ACM_POINTS[member.award_acm];
+
+    team.points_filled = _.every(team.members, x => x.experiences_points);
+
+    await team.save();
+
+    await ctx.redirect('back');
 });
 
 // 短信相关

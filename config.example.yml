@@ -14,3 +14,20 @@ MYSUBMAIL: # www.mysubmail.com
   APPID: 23333
   APPKEY: xxxxxxxxxxxxxxxxxx
   VERIFY_CODE_PROJECT: yyyyy # 验证码项目id
+
+OI_POINTS:
+  'NOI金牌': 0
+  'NOI银牌': 0
+  'NOI铜牌': 0
+  'NOI胸牌': 0
+  '没参加': 0
+  'IOI国家队': 0
+
+ACM_POINTS:
+  'ACM/ICPC区域赛金牌': 0
+  'ACM/ICPC区域赛银牌': 0
+  'ACM/ICPC区域赛铜牌': 0
+  'ACM/ICPC区域赛胸牌': 0
+  '没参加': 0
+  'WF拿奖': 0
+  'WF入围': 0
