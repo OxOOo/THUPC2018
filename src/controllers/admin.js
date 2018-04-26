@@ -55,6 +55,18 @@ router.get('/admin/teams_points', auth.adminRequired, async ctx => {
         teams: teams
     });
 });
+router.get('/admin/teams_status_all', auth.adminRequired, async ctx => {
+    let statistics = await tools.calcStatusStatistics();
+
+    let teams = await tools.calcStatusTeams('all');
+    if (ctx.query.reverse) teams = _.reverse(teams);
+
+    await ctx.render("admin/teams_status", {
+        layout: 'admin/layout',
+        teams: teams, statistics: statistics,
+        status: 'all'
+    });
+});
 router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
     let statistics = await tools.calcStatusStatistics();
 
@@ -100,26 +112,28 @@ router.get('/admin/teams/:team_id/status/:status', auth.adminRequired, async ctx
     await ctx.redirect('back');
 });
 router.get('/admin/teammember_points', auth.adminRequired, async ctx => {
-    let teams = await Team.find({info_filled: true, points_filled: false}).sort('_id').limit(10);
-    auth.assert(teams.length, '没有待评分的队伍');
-    let members = [];
-    for(let t of teams) {
-        for(let m of t.members) {
-            if (m.experiences_points) continue;
-            let obj = {};
-            obj = m;
-            obj.team = t;
-            members.push(obj);
-        }
-    }
-    let m = _.sample(members);
-
+    let m = null;
     if (ctx.query.team_id && ctx.query.member_id) {
         let team = await Team.findById(ctx.query.team_id);
         auth.assert(team, '队伍不存在');
         m = team.members.id(ctx.query.member_id);
         auth.assert(m, '成员不存在');
         m.team = team;
+    } else {
+        let teams = await Team.find({info_filled: true, points_filled: false}).sort('_id').limit(10);
+        auth.assert(teams.length, '没有待评分的队伍');
+        let members = [];
+        for(let t of teams) {
+            for(let m of t.members) {
+                if (m.experiences_points) continue;
+                let obj = {};
+                obj = m;
+                obj.team = t;
+                members.push(obj);
+            }
+        }
+        auth.assert(members.length, '成员列表为空');
+        m = _.sample(members);
     }
 
     await ctx.render("admin/teammember_points", {

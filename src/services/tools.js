@@ -65,7 +65,9 @@ exports.calcStatusStatistics = async function() {
 }
 
 exports.calcStatusTeams = async function(status) {
-    let teams = await Team.find({info_filled: true, points_filled: true, team_status: status}).sort('-_id');
+    let opt = {info_filled: true, points_filled: true};
+    if (_.includes(['none', 'accepted', 'rejected'], status)) opt.team_status = status;
+    let teams = await Team.find(opt).sort('-_id');
     for(let t of teams) {
         for(let m of t.members) {
             m.score = await calcTeamMemberPoints(m);
