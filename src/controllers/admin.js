@@ -56,93 +56,39 @@ router.get('/admin/teams_points', auth.adminRequired, async ctx => {
     });
 });
 router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
-    let statistics = {};
-    for(let status of ['all', 'none', 'accepted', 'rejected']) {
-        let opt = {info_filled: true, points_filled: true};
-        if (status != 'all') opt.team_status = status;
-        let teams = await Team.find(opt);
-        
-        let info = {};
-        info.teams_count = teams.length;
-        info.members_count = _.sum(teams.map(x => x.members.length));
-        info.each_teams_count = [0, 0, 0, 0];
-        teams.forEach(x => info.each_teams_count[x.members.length] ++);
+    let statistics = await tools.calcStatusStatistics();
 
-        statistics[status] = info;
-    }
-
-    let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'none'}).sort('-_id');
-    for(let t of teams) {
-        for(let m of t.members) {
-            m.score = await tools.calcTeamMemberPoints(m);
-        }
-        t.score = await tools.calcTeamPoints(t, t.members.map(x => x.score));
-    }
-    teams.sort((a, b) => b.score - a.score);
+    let teams = await tools.calcStatusTeams('none');
+    if (ctx.query.reverse) teams = _.reverse(teams);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
-        teams: teams, statistics: statistics
+        teams: teams, statistics: statistics,
+        status: 'none'
     });
 });
 router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
-    let statistics = {};
-    for(let status of ['all', 'none', 'accepted', 'rejected']) {
-        let opt = {info_filled: true, points_filled: true};
-        if (status != 'all') opt.team_status = status;
-        let teams = await Team.find(opt);
-        
-        let info = {};
-        info.teams_count = teams.length;
-        info.members_count = _.sum(teams.map(x => x.members.length));
-        info.each_teams_count = [0, 0, 0, 0];
-        teams.forEach(x => info.each_teams_count[x.members.length] ++);
+    let statistics = await tools.calcStatusStatistics();
 
-        statistics[status] = info;
-    }
-
-    let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'accepted'}).sort('-_id');
-    for(let t of teams) {
-        for(let m of t.members) {
-            m.score = await tools.calcTeamMemberPoints(m);
-        }
-        t.score = await tools.calcTeamPoints(t, t.members.map(x => x.score));
-    }
-    teams.sort((a, b) => b.score - a.score);
+    let teams = await tools.calcStatusTeams('accepted');
+    if (ctx.query.reverse) teams = _.reverse(teams);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
-        teams: teams, statistics: statistics
+        teams: teams, statistics: statistics,
+        status: 'accepted'
     });
 });
 router.get('/admin/teams_status_rejected', auth.adminRequired, async ctx => {
-    let statistics = {};
-    for(let status of ['all', 'none', 'accepted', 'rejected']) {
-        let opt = {info_filled: true, points_filled: true};
-        if (status != 'all') opt.team_status = status;
-        let teams = await Team.find(opt);
-        
-        let info = {};
-        info.teams_count = teams.length;
-        info.members_count = _.sum(teams.map(x => x.members.length));
-        info.each_teams_count = [0, 0, 0, 0];
-        teams.forEach(x => info.each_teams_count[x.members.length] ++);
+    let statistics = await tools.calcStatusStatistics();
 
-        statistics[status] = info;
-    }
-    
-    let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'rejected'}).sort('-_id');
-    for(let t of teams) {
-        for(let m of t.members) {
-            m.score = await tools.calcTeamMemberPoints(m);
-        }
-        t.score = await tools.calcTeamPoints(t, t.members.map(x => x.score));
-    }
-    teams.sort((a, b) => b.score - a.score);
+    let teams = await tools.calcStatusTeams('rejected');
+    if (ctx.query.reverse) teams = _.reverse(teams);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
-        teams: teams, statistics: statistics
+        teams: teams, statistics: statistics,
+        status: 'rejected'
     });
 });
 router.get('/admin/teams/:team_id/status/:status', auth.adminRequired, async ctx => {
