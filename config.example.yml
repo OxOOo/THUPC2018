@@ -31,3 +31,16 @@ ACM_POINTS:
   '没参加': 0
   'WF拿奖': 0
   'WF入围': 0
+
+WOMAN_POINTS: 0
+TEAMMEMBER_COEFFS:
+  - 
+  -
+    - 0
+  -
+    - 0
+    - 0
+  -
+    - 0
+    - 0
+    - 0

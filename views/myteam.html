@@ -5,8 +5,15 @@
     <fieldset class="layui-elem-field">
         <legend>
             队伍信息
-            {{# if (!d.not_womenteam) { }} <spin>(<spin style="color:red">女队</spin>)</spin> {{# } }}
-            {{# if (d.info_filled) { }} (等待审核) {{# } else { }} (<spin style="color:red">尚未报名</spin>) {{# } }}
+            {{# if (!d.not_womenteam) { }} <spin>(<spin style="color: red">女队</spin>)</spin> {{# } }}
+            (
+                {{# if (d.info_filled) { }}
+                    {{# var cnstatus = {none: '等待审核', accepted: '<spin style="color: green">审核通过</spin>', rejected: '<spin style="color: red">审核失败</spin>' } }}
+                    {{ cnstatus[d.team_status] }}
+                {{# } else { }}
+                    <spin style="color: blue">尚未报名</spin>
+                {{# } }}
+            )
         </legend>
         <div class="layui-field-box">
             <div class="layui-row layui-col-space20 layui-hide-xs layui-hide-sm layui-show-md-block layui-show-lg-block">
@@ -39,6 +46,17 @@
             </div>
         </div>
     </fieldset>
+
+    {{# if (d.info_filled && d.team_status == 'rejected') { }}
+    <fieldset class="layui-elem-field">
+        <legend><spin style="color: blue">提示</spin></legend>
+        <div class="layui-field-box">
+            <p>你的队伍没有通过审核,这可能是由于你填写的资料不正确或者资料不完整导致的.请填写正确的资料并补充详细的竞赛经历,比如NOIP成绩/Code+成绩/省选成绩等.</p>
+            <p>在"修改队伍信息"页面填写信息并提交之后,我们将会重新审核.</p>
+        </div>
+    </fieldset>
+    {{# } }}
+
     {{# for(var i = 0; i < d.members.length; i ++) { }}
     {{# var m = d.members[i]; }}
     <fieldset class="layui-elem-field">
@@ -81,10 +99,11 @@
         </div>
     </fieldset>
     {{# } }}
+
     <div class="layui-row text-center">
-        <a class="layui-btn layui-btn-normal" href="/myteam_modify">修改队伍信息</a>
+        <a class="layui-btn layui-btn-normal" href="/myteam_modify" {{# if (d.info_filled && d.team_status == 'accepted') { }} onclick="return confirm('你已通过审核,修改资料将会重新进入待审核状态,确定修改?')" {{# } }}>修改队伍信息</a>
         {{# if (d.info_filled) { }}
-        <a class="layui-btn" href="/myteam_cancel">取消报名</a>
+        <a class="layui-btn" href="/myteam_cancel" {{# if (d.info_filled && d.team_status == 'accepted') { }} onclick="return confirm('你已通过审核,确定取消报名?')" {{# } }}>取消报名</a>
         {{# } }}
     </div>
 </script>

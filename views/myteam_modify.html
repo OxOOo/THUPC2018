@@ -327,6 +327,10 @@
             var send_data = _.cloneDeep(_.pick(data, ['teamname', 'enteamname', 'members']));
             send_data.members = send_data.members.slice(0, data.count);
 
+            if (!confirm('你已通过审核,修改资料将会重新进入待审核状态,确定修改?')) {
+                return false;
+            }
+
             var loading = layer.load();
             $.post('/myteam_update', send_data, mustAfter(function(data) {
                 layer.close(loading);
