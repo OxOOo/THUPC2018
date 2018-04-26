@@ -38,7 +38,11 @@ router.get('/myteam_cancel', auth.loginRequired, async ctx => {
 router.get('/myteam_info', auth.loginRequired, async ctx => {
     let team = await Team.findById(ctx.state.user.team_id);
     auth.assert(team, '未知错误');
-    ctx.body = _.pick(team, ['teamname', 'enteamname', 'members', 'experiences', 'info_filled']);
+    let obj = _.pick(team, ['teamname', 'enteamname', 'members', 'experiences', 'info_filled']);
+    for(let i = 0; i < obj.members.length; i ++) {
+        obj.members[i] = _.omit(team.members[i].toJSON(), ['award_oi_points', 'award_acm_points', 'experiences_points']);
+    }
+    ctx.body = obj;
 });
 
 router.post('/myteam_update', auth.loginRequired, async ctx => {
