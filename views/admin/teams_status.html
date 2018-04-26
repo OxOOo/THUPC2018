@@ -3,9 +3,11 @@
         <tr>
             <th>队名</th>
             <th>英文队名</th>
+            <th>总分</th>
             <th>姓名</th>
             <th>学校</th>
             <th>性别</th>
+            <th>得分</th>
             <th>OI奖</th>
             <th>ACM奖</th>
             <th>经历得分</th>
@@ -19,10 +21,12 @@
                     <% if(i == 0) { %>
                     <td rowspan="<%= t.members.length %>"><%= t.teamname %></td>
                     <td rowspan="<%= t.members.length %>"><%= t.enteamname %></td>
+                    <td rowspan="<%= t.members.length %>"><%= t.score %></td>
                     <% } %>
                     <td><%= m.name %></td>
                     <td><%= m.school %></td>
                     <td><%= m.sex %></td>
+                    <td><%= m.score %></td>
                     <td><pre><%= m.award_oi %><br/><br/><%= m.award_oi_points || 0 %></pre></td>
                     <td><pre><%= m.award_acm %><br/><br/><%= m.award_acm_points || 0 %></pre></td>
                     <td><pre><%= m.experiences_points || 0 %><br/><a href="/admin/teammember_points?team_id=<%= t._id %>&member_id=<%= m._id %>">修改</a></pre></td>

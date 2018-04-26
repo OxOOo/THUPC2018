@@ -16,6 +16,13 @@ let teamSchema = new mongoose.Schema({
 		required: true
 	},
 
+	team_status: {
+		type: String,
+		required: true,
+		enum: ['none', 'accepted', 'rejected'],
+		default: 'none'
+	},
+
 	teamname: { // 队名
 		type: String,
 		maxlength: 20,
