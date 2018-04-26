@@ -113,7 +113,7 @@ router.post('/admin/teammember_points', auth.adminRequired, async ctx => {
 
     await team.save();
 
-    await ctx.redirect('back');
+    await ctx.redirect('/admin/teammember_points');
 });
 
 // 短信相关

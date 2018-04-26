@@ -16,9 +16,6 @@ router.get('/myteam', auth.loginRequired, async ctx => {
 });
 
 router.get('/myteam_modify', auth.loginRequired, async ctx => {
-    // FIXME
-    auth.assert(false, '暂时无法修改,请稍后再试');
-    
     await ctx.render("myteam_modify", {title: '修改队伍', tab: 'team'});
 });
 
@@ -26,11 +23,11 @@ router.get('/myteam_cancel', auth.loginRequired, async ctx => {
     let team = await Team.findById(ctx.state.user.team_id);
     auth.assert(team, '未知错误');
 
-    // FIXME
-    auth.assert(false, '暂时无法修改,请稍后再试');
-
     team.info_filled = false;
     await team.save();
+
+    await tools.cleanTeamPoints(team);
+
     ctx.state.flash.success = '取消成功';
     await ctx.redirect('back');
 });
@@ -50,9 +47,6 @@ router.post('/myteam_update', auth.loginRequired, async ctx => {
     auth.assert(team, '未知错误');
 
     try {
-        // FIXME
-        auth.assert(false, '暂时无法修改,请稍后再试');
-
         ctx.request.body.should.have.property('teamname').a.String().and.not.eql('', '没有中文队名');
         ctx.request.body.should.have.property('enteamname').a.String().and.not.eql('', '没有英文队名');
         let teamname = ctx.request.body.teamname;
@@ -97,6 +91,8 @@ router.post('/myteam_update', auth.loginRequired, async ctx => {
         team.members = members;
         team.info_filled = true;
         await team.save();
+
+        await tools.cleanTeamPoints(team);
 
         ctx.body = {
             success: 1
