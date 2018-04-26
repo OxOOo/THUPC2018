@@ -9,7 +9,13 @@ const ERR_CODE = 978;
 
 exports.visit = async function (ctx, next) {
     try {
-        await Visit.create({url: ctx.url, ip: ctx.state.ip, method: ctx.method, body: ctx.request.body});
+        await Visit.create({
+            url: ctx.url,
+            ip: ctx.state.ip,
+            method: ctx.method,
+            body: ctx.request.body,
+            user: ctx.state.user ? ctx.state.user.phone_number : null
+        });
     } catch(e) {
         console.error('Error on visit');
         console.error(e);

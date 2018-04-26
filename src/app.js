@@ -71,8 +71,8 @@ let router = new Router();
 
 router.use(require('koa-logger')());
 router.use(flash);
-router.use(auth.visit);
 router.use(auth.userM);
+router.use(auth.visit);
 
 router.use('', require('./controllers/index').routes());
 router.use('', require('./controllers/user').routes());
