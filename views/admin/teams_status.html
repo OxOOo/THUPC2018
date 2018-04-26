@@ -2,8 +2,10 @@
     <thead>
         <tr>
             <th>队名</th>
-            <th>英文队名</th>
+            <!-- <th>英文队名</th> -->
             <th>总分</th>
+            <th>状态</th>
+            <th>操作</th>
             <th>姓名</th>
             <th>学校</th>
             <th>性别</th>
@@ -20,8 +22,14 @@
                 <tr>
                     <% if(i == 0) { %>
                     <td rowspan="<%= t.members.length %>"><%= t.teamname %></td>
-                    <td rowspan="<%= t.members.length %>"><%= t.enteamname %></td>
+                    <!-- <td rowspan="<%= t.members.length %>"><%= t.enteamname %></td> -->
                     <td rowspan="<%= t.members.length %>"><%= t.score %></td>
+                    <td rowspan="<%= t.members.length %>"><%= t.team_status %></td>
+                    <td rowspan="<%= t.members.length %>">
+                        <a href="/admin/teams/<%= t._id %>/status/none">重置</a> |
+                        <a href="/admin/teams/<%= t._id %>/status/accepted">通过</a> |
+                        <a href="/admin/teams/<%= t._id %>/status/rejected">拒绝</a>
+                    </td>
                     <% } %>
                     <td><%= m.name %></td>
                     <td><%= m.school %></td>

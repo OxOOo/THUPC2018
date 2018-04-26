@@ -64,6 +64,7 @@ router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
         t.score = await tools.calcTeamPoints(t, t.members.map(x => x.score));
     }
     teams.sort((a, b) => b.score - a.score);
+
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams
@@ -71,6 +72,14 @@ router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
 });
 router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
     let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'accepted'}).sort('-_id');
+    for(let t of teams) {
+        for(let m of t.members) {
+            m.score = await tools.calcTeamMemberPoints(m);
+        }
+        t.score = await tools.calcTeamPoints(t, t.members.map(x => x.score));
+    }
+    teams.sort((a, b) => b.score - a.score);
+
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams
@@ -78,13 +87,30 @@ router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
 });
 router.get('/admin/teams_status_rejected', auth.adminRequired, async ctx => {
     let teams = await Team.find({info_filled: true, points_filled: true, team_status: 'rejected'}).sort('-_id');
+    for(let t of teams) {
+        for(let m of t.members) {
+            m.score = await tools.calcTeamMemberPoints(m);
+        }
+        t.score = await tools.calcTeamPoints(t, t.members.map(x => x.score));
+    }
+    teams.sort((a, b) => b.score - a.score);
+
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams
     });
 });
+router.get('/admin/teams/:team_id/status/:status', auth.adminRequired, async ctx => {
+    let team = await Team.findById(ctx.params.team_id);
+    auth.assert(team, '队伍不存在');
+    team.team_status = ctx.params.status;
+    await team.save();
+    ctx.state.flash.success = '操作成功';
+    await ctx.redirect('back');
+});
 router.get('/admin/teammember_points', auth.adminRequired, async ctx => {
-    let teams = await Team.find({info_filled: true, points_filled: false}).sort('_id').limit(20);
+    let teams = await Team.find({info_filled: true, points_filled: false}).sort('_id').limit(10);
+    auth.assert(teams.length, '没有待评分的队伍');
     let members = [];
     for(let t of teams) {
         for(let m of t.members) {
