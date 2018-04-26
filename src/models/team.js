@@ -77,17 +77,17 @@ let teamSchema = new mongoose.Schema({
 			award_oi_points: { // OI得分
 				type: Number,
 				default: null,
-				minimum: 1
+				min: 1
 			},
 			award_acm_points: {  // ACM得分
 				type: Number,
 				default: null,
-				minimum: 1
+				min: 1
 			},
 			experiences_points: {  // 其他得分
 				type: Number,
 				default: null,
-				minimum: 1
+				min: 1
 			},
 		}]
 	},

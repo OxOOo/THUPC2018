@@ -48,6 +48,13 @@ router.get('/admin/teams', auth.adminRequired, async ctx => {
         teams_count: teams_count, members_count: members_count, each_teams_count: each_teams_count
     });
 });
+router.get('/admin/teams_points', auth.adminRequired, async ctx => {
+    let teams = await Team.find({info_filled: true}).sort('-_id');
+    await ctx.render("admin/teams_points", {
+        layout: 'admin/layout',
+        teams: teams
+    });
+});
 router.get('/admin/teammember_points', auth.adminRequired, async ctx => {
     let teams = await Team.find({info_filled: true, points_filled: false}).sort('_id').limit(10);
     let members = [];
@@ -60,8 +67,16 @@ router.get('/admin/teammember_points', auth.adminRequired, async ctx => {
             members.push(obj);
         }
     }
-
     let m = _.sample(members);
+
+    if (ctx.query.team_id && ctx.query.member_id) {
+        let team = await Team.findById(ctx.query.team_id);
+        auth.assert(team, '队伍不存在');
+        m = team.members.id(ctx.query.member_id);
+        auth.assert(m, '成员不存在');
+        m.team = team;
+    }
+
     await ctx.render("admin/teammember_points", {
         layout: 'admin/layout',
         m: m
