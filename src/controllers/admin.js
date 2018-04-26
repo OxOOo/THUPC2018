@@ -37,7 +37,15 @@ router.get('/admin/users', auth.adminRequired, async ctx => {
 // 队伍相关
 router.get('/admin/teams', auth.adminRequired, async ctx => {
     let teams = await Team.find({info_filled: true}).sort('-_id');
-    await ctx.render("admin/teams", {layout: 'admin/layout', teams: teams});
+    let teams_count = teams.length;
+    let members_count = _.sum(teams.map(x => x.members.length));
+    let each_teams_count = [0, 0, 0, 0];
+    teams.forEach(x => each_teams_count[x.members.length] ++);
+    await ctx.render("admin/teams", {
+        layout: 'admin/layout',
+        teams: teams,
+        teams_count: teams_count, members_count: members_count, each_teams_count: each_teams_count
+    });
 });
 
 // 短信相关
