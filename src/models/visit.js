@@ -14,6 +14,8 @@ let visitSchema = new mongoose.Schema({
 
 	method: String,
 
+	body: Object,
+
 	created_date: { type: Date, default: Date.now },
 });
 
