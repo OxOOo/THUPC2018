@@ -181,6 +181,7 @@
             highschool: [],
             university: [],
         };
+        var team_data = {}; // 原始的队伍数据
 
         // 刷新select
         function refreshSelect() {
@@ -327,7 +328,7 @@
             var send_data = _.cloneDeep(_.pick(data, ['teamname', 'enteamname', 'members']));
             send_data.members = send_data.members.slice(0, data.count);
 
-            if (!confirm('你已通过审核,修改资料将会重新进入待审核状态,确定修改?')) {
+            if (team_data.info_filled && team_data.team_status == 'accepted' && !confirm('你已通过审核,修改资料将会重新进入待审核状态,确定修改?')) {
                 return false;
             }
 
@@ -352,6 +353,7 @@
         $.get('/myteam_info', mustAfter(function(teamdata) {
             layer.close(loading);
 
+            team_data = teamdata;
             _.assign(data, teamdata);
             data.count = Math.max(1, teamdata.members.length);
             while(data.members.length < 3) data.members.push(_.clone(default_member));
