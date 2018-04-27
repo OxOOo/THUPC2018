@@ -58,6 +58,10 @@ exports.calcStatusStatistics = async function() {
         info.members_count = _.sum(teams.map(x => x.members.length));
         info.each_teams_count = [0, 0, 0, 0];
         teams.forEach(x => info.each_teams_count[x.members.length] ++);
+        info.women_team = 0;
+        for(let t of teams) {
+            if (await isWomenTeam(t)) info.women_team ++;
+        }
 
         statistics[status] = info;
     }
