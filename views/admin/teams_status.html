@@ -1,5 +1,10 @@
-<a href="/admin/teams_status_<%= status %>">正序</a>
-<a href="/admin/teams_status_<%= status %>?reverse=1">倒序</a>
+<div>
+    <a href="/admin/teams_status_<%= status %>">正序</a>
+    <a href="/admin/teams_status_<%= status %>?reverse=1">倒序</a>
+</div>
+<div>
+    <strong>学校名称后面出现<spin style="color:red">*</spin>表示目前该学校还没有"校队"通过.</strong>
+</div>
 
 <% let cnname = {'all': '总', 'none': '待定', 'accepted': '通过', 'rejected': '拒绝'} %>
 <table class="layui-table">
@@ -56,7 +61,7 @@
                     </td>
                     <% } %>
                     <td><%= m.name %></td>
-                    <td><%= m.school %></td>
+                    <td><%= m.school %><% if (!_.includes(accepted_schools, m.school)) { %><spin style="color:red">*</spin><% } %></td>
                     <td><%= m.sex %></td>
                     <td><%= m.score %></td>
                     <td><pre><%= m.award_oi %><br/><br/><%= m.award_oi_points || 0 %></pre></td>

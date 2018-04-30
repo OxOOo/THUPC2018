@@ -60,11 +60,14 @@ router.get('/admin/teams_status_all', auth.adminRequired, async ctx => {
 
     let teams = await tools.calcStatusTeams('all');
     if (ctx.query.reverse) teams = _.reverse(teams);
+    let accepted_teams = await tools.calcStatusTeams('accepted');
+    let accepted_schools = accepted_teams.filter(t => _.every(t.members, m => m.school == t.members[0].school)).map(t => t.members[0].school);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams, statistics: statistics,
-        status: 'all'
+        status: 'all',
+        accepted_schools: accepted_schools
     });
 });
 router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
@@ -72,11 +75,14 @@ router.get('/admin/teams_status_none', auth.adminRequired, async ctx => {
 
     let teams = await tools.calcStatusTeams('none');
     if (ctx.query.reverse) teams = _.reverse(teams);
+    let accepted_teams = await tools.calcStatusTeams('accepted');
+    let accepted_schools = accepted_teams.filter(t => _.every(t.members, m => m.school == t.members[0].school)).map(t => t.members[0].school);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams, statistics: statistics,
-        status: 'none'
+        status: 'none',
+        accepted_schools: accepted_schools
     });
 });
 router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
@@ -84,11 +90,14 @@ router.get('/admin/teams_status_accepted', auth.adminRequired, async ctx => {
 
     let teams = await tools.calcStatusTeams('accepted');
     if (ctx.query.reverse) teams = _.reverse(teams);
+    let accepted_teams = await tools.calcStatusTeams('accepted');
+    let accepted_schools = accepted_teams.filter(t => _.every(t.members, m => m.school == t.members[0].school)).map(t => t.members[0].school);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams, statistics: statistics,
-        status: 'accepted'
+        status: 'accepted',
+        accepted_schools: accepted_schools
     });
 });
 router.get('/admin/teams_status_rejected', auth.adminRequired, async ctx => {
@@ -96,11 +105,14 @@ router.get('/admin/teams_status_rejected', auth.adminRequired, async ctx => {
 
     let teams = await tools.calcStatusTeams('rejected');
     if (ctx.query.reverse) teams = _.reverse(teams);
+    let accepted_teams = await tools.calcStatusTeams('accepted');
+    let accepted_schools = accepted_teams.filter(t => _.every(t.members, m => m.school == t.members[0].school)).map(t => t.members[0].school);
 
     await ctx.render("admin/teams_status", {
         layout: 'admin/layout',
         teams: teams, statistics: statistics,
-        status: 'rejected'
+        status: 'rejected',
+        accepted_schools: accepted_schools
     });
 });
 router.get('/admin/teams/:team_id/status/:status', auth.adminRequired, async ctx => {
