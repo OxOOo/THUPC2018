@@ -19,6 +19,7 @@
   "dependencies": {
     "debug": "^3.1.0",
     "ejs": "^2.5.8",
+    "iconv-lite": "^0.4.21",
     "js-yaml": "^3.11.0",
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",

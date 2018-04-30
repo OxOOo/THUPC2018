@@ -3,6 +3,8 @@ let Router = require('koa-router');
 let _ = require('lodash');
 let path = require('path');
 let mzfs = require('mz/fs');
+let qs = require('querystring');
+let iconv = require('iconv-lite');
 require('should');
 
 let auth = require('../services/auth');
@@ -185,6 +187,26 @@ router.post('/admin/teammember_points', auth.adminRequired, async ctx => {
     await team.save();
 
     await ctx.redirect('/admin/teammember_points');
+});
+
+// 下载
+router.get('/admin/download_accepted_teams', auth.adminRequired, async ctx => {
+    let teams = await Team.find({team_status: 'accepted'});
+
+    let lines = [];
+    lines.push(['队名', '英文队名', '姓名', '电话号码', '学校', '年级', '衣服尺寸', '性别']);
+    for(let t of teams) {
+        for(let m of t.members) {
+            lines.push([t.teamname, t.enteamname, m.name, m.phone_number, m.school, m.grade, m.tshirt_size, m.sex]);
+        }
+    }
+
+    ctx.set("Content-Disposition", `attachment; filename=${qs.escape('已通过的队伍名单')}.csv`);
+    let content = lines.map(x => {return x.join(',')}).join('\n');
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
 });
 
 // 短信相关
