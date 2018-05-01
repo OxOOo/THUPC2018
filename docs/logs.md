@@ -1,4 +1,4 @@
-如果直接访问[thupc.net](thupc.net)较慢,可以尝试访问[http://proxy.thupc.net](http://proxy.thupc.net).
+如果直接访问[http://thupc.net](http://thupc.net)较慢,可以尝试访问[http://proxy.thupc.net](http://proxy.thupc.net).
 
 ---------
 
