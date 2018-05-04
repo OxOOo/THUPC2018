@@ -16,7 +16,13 @@ const router = module.exports = new Router();
 
 // 后台
 router.get('/admin', auth.adminRequired, async ctx => {
-    await ctx.render("admin/index", {layout: 'admin/layout'});
+    let user_count = await User.count();
+    let olcontest_count = await User.find({olcontest_register: true}).count();
+    await ctx.render("admin/index", {
+        layout: 'admin/layout',
+        user_count: user_count,
+        olcontest_count: olcontest_count
+    });
 });
 
 // 用户相关
