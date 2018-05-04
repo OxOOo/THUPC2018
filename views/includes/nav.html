@@ -18,6 +18,10 @@
         </dl>
     </li>
 
+    <li class="layui-nav-item <%= tab == 'onlinecontest' ? 'layui-this' : '' %>">
+        <a href="/onlinecontest">网络赛</a>
+    </li>
+
     <li class="layui-nav-item <%= tab == 'team' ? 'layui-this' : '' %>">
         <a href="/myteam">我的队伍<% if (team && !team.info_filled) { %><span class="layui-badge-dot"></span><% } %></a>
     </li>

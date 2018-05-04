@@ -12,6 +12,17 @@ let { Team } = require('../models');
 let auth = require('../services/auth');
 let tools = require('../services/tools');
 
+router.get('/onlinecontest', auth.loginRequired, async ctx => {
+    await ctx.render("onlinecontest", {title: '网络赛', tab: 'onlinecontest'});
+});
+
+router.post('/onlinecontest_register', auth.loginRequired, async ctx => {
+    ctx.state.user.olcontest_register = true;
+    await ctx.state.user.save();
+    ctx.state.flash.success = '报名成功';
+    await ctx.redirect('back');
+});
+
 router.get('/myteam', auth.loginRequired, async ctx => {
     await ctx.render("myteam", {title: '我的队伍', tab: 'team'});
 });

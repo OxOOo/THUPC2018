@@ -23,6 +23,13 @@ let userSchema = new mongoose.Schema({
 		default: false
 	},
 
+	olcontest_register: {
+		type: Boolean,
+		default: false
+	},
+	olcontest_username: String,
+	olcontest_password: String,
+
 	team_id: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Team',

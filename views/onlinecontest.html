@@ -1,0 +1,21 @@
+
+<div>
+    <p>用户名 : <%= user.olcontest_username || 'NULL' %> , 密码 : <%= user.olcontest_password || 'NULL' %></p>
+    <p>网络赛的网址和帐号将会在比赛前公布.</p>
+</div>
+
+<% if (user.olcontest_register) { %>
+    <div class="entry-form">
+        <h1 class="text-center" style="color: green">已经报名</h1>
+    </div>
+<% } else { %>
+    <div class="entry-form">
+        <h1 class="text-center">报名网络赛</h1>
+        <br/>
+        <form class="layui-form layui-form-pane" action="/onlinecontest_register" method="POST">
+            <div class="layui-form-item">
+                <button type="submit" lay-submit class="layui-btn layui-btn-fluid">报名</button>
+            </div>
+        </form>
+    </div>
+<% } %>
