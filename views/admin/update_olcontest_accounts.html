@@ -1,0 +1,28 @@
+<pre>
+    phone_number: String,
+    olcontest_username: String,
+    olcontest_password: Object,
+</pre>
+<hr/>
+<h3>更新之前会清空所有数据</h3>
+<hr/>
+<form class="layui-form" action="/admin/update_olcontest_accounts" method="POST">
+    <div class="layui-form-item">
+        <label class="layui-form-label">JSON</label>
+        <div class="layui-input-block">
+            <textarea name="accounts_json" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit>提交</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render();
+    });
+</script>

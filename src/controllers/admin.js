@@ -215,6 +215,50 @@ router.get('/admin/download_accepted_teams', auth.adminRequired, async ctx => {
     ctx.body = content;
 });
 
+// 网络赛
+router.get('/admin/download_olcontest_accounts', auth.adminRequired, async ctx => {
+    let users = await User.find({olcontest_register: true});
+
+    let lines = [];
+    for(let u of users) {
+        lines.push(u.phone_number);
+    }
+
+    ctx.set("Content-Disposition", `attachment; filename=${qs.escape('网络赛报名名单')}.txt`);
+    let content = lines.join('\n');
+    ctx.body = content;
+});
+router.get('/admin/update_olcontest_accounts', auth.adminRequired, async ctx => {
+    await ctx.render('admin/update_olcontest_accounts', {
+        layout: 'admin/layout',
+    });
+});
+router.post('/admin/update_olcontest_accounts', auth.adminRequired, async ctx => {
+    let accounts = JSON.parse(ctx.request.body.accounts_json);
+    await User.update({}, {$set: {olcontest_username: null, olcontest_password: null}}, {upsert: false, multi: true});
+
+    let warning = null;
+    for(let a of accounts) {
+        let u = await User.findOne({phone_number: a.phone_number});
+        if (!u) {
+            warning = `${a.phone_number}用户不存在`;
+            continue;
+        }
+        u.olcontest_username = a.olcontest_username;
+        u.olcontest_password = a.olcontest_password;
+        await u.save();
+        if (!u.olcontest_register) {
+            warning = `${a.phone_number}并没有报名网络赛`;
+        }
+    }
+    if (warning) {
+        ctx.state.flash.warning = warning;
+    } else {
+        ctx.state.flash.success = '修改成功';
+    }
+    await ctx.redirect('back');
+});
+
 // 短信相关
 router.get('/admin/sms', auth.adminRequired, async ctx => {
     await ctx.render("admin/sms", {layout: 'admin/layout'});
