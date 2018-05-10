@@ -25,6 +25,16 @@
     <li class="layui-nav-item <%= tab == 'team' ? 'layui-this' : '' %>">
         <a href="/myteam">我的队伍<% if (team && !team.info_filled) { %><span class="layui-badge-dot"></span><% } %></a>
     </li>
+    <% if (team && team.team_status == 'accepted') { %>
+        <li class="layui-nav-item <%= tab == 'teamtools' ? 'layui-this' : '' %>">
+            <a href="#" style="color: rgb(235, 33, 33)">队伍工具箱</a>
+            <dl class="layui-nav-child">
+                <dd>
+                    <a href="/myteam/invitations">下载邀请函</a>
+                </dd>
+            </dl>
+        </li>
+    <% } %>
     <% if(user) { %>
         <li class="layui-nav-item <%= tab == 'user' ? 'layui-this' : '' %>">
             <a href="#"><%= hidden_phone_number(user.phone_number) %></a>

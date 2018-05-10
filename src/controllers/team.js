@@ -4,6 +4,7 @@ let _ = require('lodash');
 let path = require('path');
 let mzfs = require('mz/fs');
 let moment = require('moment');
+let qs = require('querystring');
 require('should');
 
 const router = module.exports = new Router();
@@ -132,4 +133,20 @@ router.get('/team/university', auth.loginRequired, async ctx => {
     let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'university.csv'), 'utf-8');
     let list = _.split(content, '\n').map(x => _.trim(x)).filter(x => x.length>0);
     ctx.body = list;
+});
+
+router.get('/myteam/invitations', auth.loginRequired, async ctx => {
+    auth.assert(ctx.state.team && ctx.state.team.team_status == 'accepted', '抱歉,你的队伍没有通过审核');
+    await ctx.render("invitations", {title: '队伍工具箱', tab: 'teamtools'});
+});
+
+router.get('/myteam/invitations_download/:name/:format', auth.loginRequired, async ctx => {
+    auth.assert(ctx.state.team && ctx.state.team.team_status == 'accepted', '抱歉,你的队伍没有通过审核');
+    auth.assert(_.some(ctx.state.team.members, x => x.name == ctx.params.name), `${ctx.params.name}不是你的队员`);
+    let filename = ctx.params.name+'.'+ctx.params.format;
+    let filepath = path.join(__dirname, '..', '..', 'invitations', filename);
+    auth.assert(await mzfs.exists(filepath), '文件不存在');
+    let img = await mzfs.readFile(filepath);
+    ctx.set("Content-Disposition", `attachment; filename=${qs.escape(filename)}`);
+    ctx.body = img;
 });

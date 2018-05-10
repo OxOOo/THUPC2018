@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/believedotchenyu/THUPC2018#readme",
   "dependencies": {
+    "canvas": "^1.6.10",
     "debug": "^3.1.0",
     "ejs": "^2.5.8",
     "iconv-lite": "^0.4.21",

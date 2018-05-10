@@ -1,0 +1,54 @@
+<div id="team_view">
+</div>
+
+<script id="team_template" type="text/html">
+    {{# for(var i = 0; i < d.members.length; i ++) { }}
+    {{# var m = d.members[i]; }}
+    <fieldset class="layui-elem-field">
+        <legend>队员{{i}}</legend>
+        <div class="layui-field-box">
+            <fieldset class="layui-elem-field">
+                <legend>邀请函(不带公章版)</legend>
+                <div class="layui-field-box">
+                    <div>下载: <a href="/myteam/invitations_download/{{= m.name }}/png">PNG格式邀请函(文件较大)</a> | <a href="/myteam/invitations_download/{{= m.name }}/jpg">JPG格式邀请函(文件较小)</a></div>
+                    <div>说明: 请在进入校门时想门卫出示本邀请函</div>
+                </div>
+            </fieldset>
+        </div>
+    </fieldset>
+    {{# } }}
+</script>
+
+<script>
+    layui.use(['form', 'laytpl'], function () {
+        var form = layui.form;
+        var laytpl = layui.laytpl;
+        var data = {
+            teamname: '',
+            enteamname: '',
+            experiences: '',
+            members: [],
+        };
+
+        // 渲染
+        function render() {
+            var not_womenteam = data.members.length == 0 || _.some(data.members, function(m) {
+                return m.sex != '女';
+            });
+            data.not_womenteam = not_womenteam;
+            var tpl = $('#team_template').html();
+            var view = $('#team_view');
+            view.html(laytpl(tpl).render(data));
+        }
+
+        render();
+
+        var loading = layer.load();
+        $.get('/myteam_info', mustAfter(function (teamdata) {
+            layer.close(loading);
+
+            data = teamdata;
+            render();
+        }, 500));
+    });
+</script>
