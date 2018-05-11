@@ -18,6 +18,8 @@ router.get('/onlinecontest', auth.loginRequired, async ctx => {
 });
 
 router.post('/onlinecontest_register', auth.loginRequired, async ctx => {
+    auth.assert(moment().isBefore(moment('2018-05-12 12:00')), '网络赛报名已截止');
+
     ctx.state.user.olcontest_register = true;
     await ctx.state.user.save();
     ctx.state.flash.success = '报名成功';
