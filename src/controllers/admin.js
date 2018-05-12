@@ -208,13 +208,6 @@ router.get('/admin/download_accepted_teams', auth.adminRequired, async ctx => {
     }
 
     ctx.set("Content-Disposition", `attachment; filename=${qs.escape('已通过的队伍名单')}.csv`);
-    lines = lines.map(line => {
-        line.map(x => {
-            if (x.indexOf(',') != -1) x = x.replace(',', ' 、');
-            return x;
-        });
-        return line;
-    });
     let content = lines.map(x => {return x.join(',')}).join('\n');
     if (ctx.request.query.encoding) {
         content = iconv.encode(content, ctx.request.query.encoding);
@@ -234,7 +227,7 @@ router.get('/admin/download_accepted_teams_award', auth.adminRequired, async ctx
 
     ctx.set("Content-Disposition", `attachment; filename=${qs.escape('已通过的队伍名单带获奖信息')}.csv`);
     lines = lines.map(line => {
-        line.map(x => {
+        line = line.map(x => {
             while (x.indexOf(',') != -1) x = x.replace(',', ' 、');
             while (x.indexOf('\r') != -1) x = x.replace('\r', '');
             while (x.indexOf('\n') != -1) x = x.replace('\n', '[换行]');
