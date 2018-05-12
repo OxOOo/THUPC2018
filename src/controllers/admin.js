@@ -208,6 +208,38 @@ router.get('/admin/download_accepted_teams', auth.adminRequired, async ctx => {
     }
 
     ctx.set("Content-Disposition", `attachment; filename=${qs.escape('已通过的队伍名单')}.csv`);
+    lines = lines.map(line => {
+        line.map(x => {
+            if (x.indexOf(',') != -1) x = x.replace(',', ' 、');
+            return x;
+        });
+        return line;
+    });
+    let content = lines.map(x => {return x.join(',')}).join('\n');
+    if (ctx.request.query.encoding) {
+        content = iconv.encode(content, ctx.request.query.encoding);
+    }
+    ctx.body = content;
+});
+router.get('/admin/download_accepted_teams_award', auth.adminRequired, async ctx => {
+    let teams = await Team.find({team_status: 'accepted'});
+
+    let lines = [];
+    lines.push(['队名', '英文队名', '姓名', '电话号码', '学校', '年级', '衣服尺寸', '性别', 'OI奖项', 'ACM奖项', '竞赛经历']);
+    for(let t of teams) {
+        for(let m of t.members) {
+            lines.push([t.teamname, t.enteamname, m.name, m.phone_number, m.school, m.grade, m.tshirt_size, m.sex, m.award_oi, m.award_acm, m.experiences]);
+        }
+    }
+
+    ctx.set("Content-Disposition", `attachment; filename=${qs.escape('已通过的队伍名单带获奖信息')}.csv`);
+    lines = lines.map(line => {
+        line.map(x => {
+            if (x.indexOf(',') != -1) x = x.replace(',', ' 、');
+            return x;
+        });
+        return line;
+    });
     let content = lines.map(x => {return x.join(',')}).join('\n');
     if (ctx.request.query.encoding) {
         content = iconv.encode(content, ctx.request.query.encoding);
