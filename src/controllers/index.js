@@ -17,6 +17,11 @@ router.get('/info', async ctx => {
     await ctx.render('markdown', {tab: 'info', content: content});
 });
 
+router.get('/ranklist', async ctx => {
+    let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'docs', 'ranklist.md'), 'utf-8');
+    await ctx.render('markdown', {tab: 'info', content: content});
+});
+
 router.get('/logs', async ctx => {
     let content = await mzfs.readFile(path.join(__dirname, '..', '..', 'docs', 'logs.md'), 'utf-8');
     await ctx.render('markdown', {tab: 'info', content: content});
